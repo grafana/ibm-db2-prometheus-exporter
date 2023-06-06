@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//TODO: add go build tag
 
 package collector
 
@@ -83,13 +84,13 @@ func NewCollector(logger log.Logger, cfg *Config) *Collector {
 			nil,
 		),
 		connectionsTop: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "connections", "top"),
+			prometheus.BuildFQName(namespace, "connections", "top_total"),
 			"The maximum number of concurrent connections to the database since the database was activated.",
 			[]string{labelDatabaseName},
 			nil,
 		),
 		deadlockCount: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "deadlock", "count"),
+			prometheus.BuildFQName(namespace, "deadlock", "total"),
 			"The total number of deadlocks that have occurred.",
 			[]string{labelDatabaseName},
 			nil,
@@ -107,7 +108,7 @@ func NewCollector(logger log.Logger, cfg *Config) *Collector {
 			nil,
 		),
 		lockTimeoutCount: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "lock", "timeout_count"),
+			prometheus.BuildFQName(namespace, "lock", "timeout_total"),
 			"The number of timeouts that a request to lock an object occurred instead of being granted.",
 			[]string{labelDatabaseName},
 			nil,
@@ -119,7 +120,7 @@ func NewCollector(logger log.Logger, cfg *Config) *Collector {
 			nil,
 		),
 		rowCount: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "row", "count"),
+			prometheus.BuildFQName(namespace, "row", "total"),
 			"The total number of rows inserted, updated, read or deleted.",
 			[]string{labelDatabaseName, labelRowState},
 			nil,
@@ -137,7 +138,7 @@ func NewCollector(logger log.Logger, cfg *Config) *Collector {
 			nil,
 		),
 		logOperations: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "log", "operations"),
+			prometheus.BuildFQName(namespace, "log", "operations_total"),
 			"The number of log pages read and written to by the logger.",
 			[]string{labelDatabaseName, labelLogMember, labelLogOperationType},
 			nil,
@@ -179,7 +180,7 @@ func (c *Collector) Collect(metrics chan<- prometheus.Metric) {
 	db, err := c.openDatabase(c.config.DSN)
 	if err != nil {
 		level.Error(c.logger).Log("msg", "Failed to connect to DB2.", "err", err)
-		metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, 0)
+		metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, 0, c.config.DatabaseName)
 		return
 	}
 
@@ -220,7 +221,7 @@ func (c *Collector) Collect(metrics chan<- prometheus.Metric) {
 		up = 0
 	}
 
-	metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, up)
+	metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, up, c.config.DatabaseName)
 }
 
 func (c *Collector) collectDatabaseMetrics(db *sql.DB, metrics chan<- prometheus.Metric) error {

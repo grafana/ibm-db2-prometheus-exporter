@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//TODO: add go build tag
 
 package collector
 
@@ -45,11 +46,10 @@ const (
 
 	tablespaceStorageMetricsQuery = `SELECT 
 	tbsp_name, 
-	tbsp_page_size as size, 
-	(tbsp_total_pages*size) as total_b, 
-	(tbsp_free_pages*size) as free_b, 
-	(tbsp_used_pages*size) as used_b
-	FROM TABLE(MON_GET_TABLESPACE(-2))
+	(tbsp_total_pages*tbsp_page_size) as total_b, 
+	(tbsp_free_pages*tbsp_page_size) as free_b, 
+	(tbsp_used_pages*tbsp_page_size) as used_b
+	FROM TABLE(MON_GET_TABLESPACE('', -2))
 	`
 
 	logsMetricsQuery = `SELECT
