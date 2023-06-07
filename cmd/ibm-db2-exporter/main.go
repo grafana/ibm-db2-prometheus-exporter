@@ -71,7 +71,9 @@ func main() {
 	logger := promlog.New(promlogConfig)
 
 	// Construct the collector, using the flags for configuration
-	c := &collector.Config{}
+	c := &collector.Config{
+		DSN: *dsn,
+	}
 
 	if err := c.Validate(); err != nil {
 		level.Error(logger).Log("msg", "Configuration is invalid.", "err", err)

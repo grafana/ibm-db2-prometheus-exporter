@@ -27,14 +27,14 @@ type Config struct {
 
 var (
 	errNoDSN      = errors.New("DSN must be specified")
-	errNoHost     = errors.New("HOST must be specified in the DSN")
+	errNoHost     = errors.New("HOSTNAME must be specified in the DSN")
 	errNoDatabase = errors.New("DATABASE must be specified in the DSN")
 	errNoPort     = errors.New("PORT must be specified in the DSN")
 	errNoUID      = errors.New("UID must be specified in the DSN")
 	errNoPWD      = errors.New("PWD must be specified in the DSN")
 )
 
-func (c Config) Validate() error {
+func (c *Config) Validate() error {
 	if c.DSN == "" {
 		return errNoDSN
 	}

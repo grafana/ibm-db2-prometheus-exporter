@@ -45,17 +45,17 @@ const (
 	`
 
 	tablespaceStorageMetricsQuery = `SELECT 
-	tbsp_name, 
+	tbsp_name,
 	(tbsp_total_pages*tbsp_page_size) as total_b, 
 	(tbsp_free_pages*tbsp_page_size) as free_b, 
 	(tbsp_used_pages*tbsp_page_size) as used_b
 	FROM TABLE(MON_GET_TABLESPACE('', -2))
 	`
 
-	logsMetricsQuery = `SELECT
+	logsMetricsQuery = `SELECT 
 	member,
-	(total_log_available / 4000) as blocks_available, 
-	(total_log_used / 4000) as blocks_used
+	(total_log_available / 4000) as blocks_available,
+	(total_log_used / 4000) as blocks_used,
 	log_reads,
 	log_writes
 	FROM TABLE(MON_GET_TRANSACTION_LOG(-2))
@@ -81,7 +81,7 @@ const (
 		member,
 		CASE WHEN logical_reads > 0
 			THEN DEC((1 - (FLOAT(physical_reads) / FLOAT(logical_reads))) * 100,5,2)
-			ELSE NULL
+			ELSE -1
 		END AS HIT_RATIO
 	FROM BPMETRICS;
 	`

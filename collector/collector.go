@@ -49,6 +49,7 @@ type Collector struct {
 	config       *Config
 	logger       log.Logger
 	openDatabase func(string) (*sql.DB, error)
+	dbName       string
 
 	applicationActive    *prometheus.Desc
 	applicationExecuting *prometheus.Desc
@@ -71,6 +72,7 @@ func NewCollector(logger log.Logger, cfg *Config) *Collector {
 		config:       cfg,
 		logger:       logger,
 		openDatabase: openIBMDBDatabase,
+		dbName:       cfg.DatabaseName,
 		applicationActive: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "application", "active"),
 			"The number of applications that are currently connected to the database.",
@@ -180,7 +182,7 @@ func (c *Collector) Collect(metrics chan<- prometheus.Metric) {
 	db, err := c.openDatabase(c.config.DSN)
 	if err != nil {
 		level.Error(c.logger).Log("msg", "Failed to connect to DB2.", "err", err)
-		metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, 0, c.config.DatabaseName)
+		metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, 0, c.dbName)
 		return
 	}
 
@@ -221,7 +223,7 @@ func (c *Collector) Collect(metrics chan<- prometheus.Metric) {
 		up = 0
 	}
 
-	metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, up, c.config.DatabaseName)
+	metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, up, c.dbName)
 }
 
 func (c *Collector) collectDatabaseMetrics(db *sql.DB, metrics chan<- prometheus.Metric) error {
@@ -237,8 +239,8 @@ func (c *Collector) collectDatabaseMetrics(db *sql.DB, metrics chan<- prometheus
 			return fmt.Errorf("failed to scan row: %w", err)
 		}
 
-		metrics <- prometheus.MustNewConstMetric(c.connectionsTop, prometheus.CounterValue, connections_top, c.config.DatabaseName)
-		metrics <- prometheus.MustNewConstMetric(c.deadlockCount, prometheus.CounterValue, deadlock_count, c.config.DatabaseName)
+		metrics <- prometheus.MustNewConstMetric(c.connectionsTop, prometheus.CounterValue, connections_top, c.dbName)
+		metrics <- prometheus.MustNewConstMetric(c.deadlockCount, prometheus.CounterValue, deadlock_count, c.dbName)
 	}
 
 	return rows.Err()
@@ -257,8 +259,8 @@ func (c *Collector) collectApplicationMetrics(db *sql.DB, metrics chan<- prometh
 			return fmt.Errorf("failed to scan row: %w", err)
 		}
 
-		metrics <- prometheus.MustNewConstMetric(c.applicationActive, prometheus.GaugeValue, application_active, c.config.DatabaseName)
-		metrics <- prometheus.MustNewConstMetric(c.applicationExecuting, prometheus.GaugeValue, application_executing, c.config.DatabaseName)
+		metrics <- prometheus.MustNewConstMetric(c.applicationActive, prometheus.GaugeValue, application_active, c.dbName)
+		metrics <- prometheus.MustNewConstMetric(c.applicationExecuting, prometheus.GaugeValue, application_executing, c.dbName)
 	}
 
 	return rows.Err()
@@ -277,10 +279,10 @@ func (c *Collector) collectLockMetrics(db *sql.DB, metrics chan<- prometheus.Met
 			return fmt.Errorf("failed to scan row: %w", err)
 		}
 
-		metrics <- prometheus.MustNewConstMetric(c.lockUsage, prometheus.GaugeValue, lock_waiting, c.config.DatabaseName, "waiting")
-		metrics <- prometheus.MustNewConstMetric(c.lockUsage, prometheus.GaugeValue, lock_active, c.config.DatabaseName, "active")
-		metrics <- prometheus.MustNewConstMetric(c.lockWaitTime, prometheus.GaugeValue, lock_wait_time, c.config.DatabaseName)
-		metrics <- prometheus.MustNewConstMetric(c.lockTimeoutCount, prometheus.CounterValue, lock_timeout_count, c.config.DatabaseName)
+		metrics <- prometheus.MustNewConstMetric(c.lockUsage, prometheus.GaugeValue, lock_waiting, c.dbName, "waiting")
+		metrics <- prometheus.MustNewConstMetric(c.lockUsage, prometheus.GaugeValue, lock_active, c.dbName, "active")
+		metrics <- prometheus.MustNewConstMetric(c.lockWaitTime, prometheus.GaugeValue, lock_wait_time, c.dbName)
+		metrics <- prometheus.MustNewConstMetric(c.lockTimeoutCount, prometheus.CounterValue, lock_timeout_count, c.dbName)
 	}
 
 	return rows.Err()
@@ -299,10 +301,10 @@ func (c *Collector) collectRowMetrics(db *sql.DB, metrics chan<- prometheus.Metr
 			return fmt.Errorf("failed to scan row: %w", err)
 		}
 
-		metrics <- prometheus.MustNewConstMetric(c.rowCount, prometheus.CounterValue, deleted, c.config.DatabaseName, "deleted")
-		metrics <- prometheus.MustNewConstMetric(c.rowCount, prometheus.CounterValue, inserted, c.config.DatabaseName, "inserted")
-		metrics <- prometheus.MustNewConstMetric(c.rowCount, prometheus.CounterValue, updated, c.config.DatabaseName, "updated")
-		metrics <- prometheus.MustNewConstMetric(c.rowCount, prometheus.CounterValue, read, c.config.DatabaseName, "read")
+		metrics <- prometheus.MustNewConstMetric(c.rowCount, prometheus.CounterValue, deleted, c.dbName, "deleted")
+		metrics <- prometheus.MustNewConstMetric(c.rowCount, prometheus.CounterValue, inserted, c.dbName, "inserted")
+		metrics <- prometheus.MustNewConstMetric(c.rowCount, prometheus.CounterValue, updated, c.dbName, "updated")
+		metrics <- prometheus.MustNewConstMetric(c.rowCount, prometheus.CounterValue, read, c.dbName, "read")
 	}
 
 	return rows.Err()
@@ -322,9 +324,9 @@ func (c *Collector) collectTablespaceStorageMetrics(db *sql.DB, metrics chan<- p
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
 
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, total, c.config.DatabaseName, tablespace_name, "total")
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, free, c.config.DatabaseName, tablespace_name, "free")
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, used, c.config.DatabaseName, tablespace_name, "used")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, total, c.dbName, tablespace_name, "total")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, free, c.dbName, tablespace_name, "free")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, used, c.dbName, tablespace_name, "used")
 	}
 
 	return rows.Err()
@@ -345,10 +347,10 @@ func (c *Collector) collectLogsMetrics(db *sql.DB, metrics chan<- prometheus.Met
 		}
 		member := strconv.Itoa(i_member)
 
-		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, available, c.config.DatabaseName, member, "available")
-		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, used, c.config.DatabaseName, member, "used")
-		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, reads, c.config.DatabaseName, member, "read")
-		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, writes, c.config.DatabaseName, member, "write")
+		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, available, c.dbName, member, "available")
+		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, used, c.dbName, member, "used")
+		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, reads, c.dbName, member, "read")
+		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, writes, c.dbName, member, "write")
 	}
 
 	return rows.Err()
@@ -368,7 +370,12 @@ func (c *Collector) collectBufferpoolMetrics(db *sql.DB, metrics chan<- promethe
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
 
-		metrics <- prometheus.MustNewConstMetric(c.bufferpoolHitRatio, prometheus.GaugeValue, ratio, c.config.DatabaseName, bp_name)
+		// skip over row if bp hit ratio can't be calculated/is -1
+		if ratio == -1 {
+			continue
+		}
+
+		metrics <- prometheus.MustNewConstMetric(c.bufferpoolHitRatio, prometheus.GaugeValue, ratio, c.dbName, bp_name)
 	}
 
 	return rows.Err()
