@@ -35,7 +35,7 @@ func TestCollector_Collect(t *testing.T) {
 		db, mock := createMockDB(t)
 
 		col := NewCollector(log.NewJSONLogger(os.Stdout), &Config{})
-		col.openDatabase = func(_ string) (*sql.DB, error) { return db, nil }
+		col.db = db
 
 		// writing metrics
 		// reg := prometheus.NewRegistry()
@@ -54,7 +54,7 @@ func TestCollector_Collect(t *testing.T) {
 		db, mock := createMockDB(t)
 
 		col := NewCollector(log.NewJSONLogger(os.Stdout), &Config{})
-		col.openDatabase = func(_ string) (*sql.DB, error) { return db, nil }
+		col.db = db
 
 		p, err := testutil.CollectAndLint(col)
 		require.NoError(t, err)
@@ -66,7 +66,7 @@ func TestCollector_Collect(t *testing.T) {
 		db, mock := createQueryErrMockDB(t)
 
 		col := NewCollector(log.NewJSONLogger(os.Stdout), &Config{})
-		col.openDatabase = func(_ string) (*sql.DB, error) { return db, nil }
+		col.db = db
 
 		// writing metrics
 		// reg := prometheus.NewRegistry()
@@ -84,8 +84,8 @@ func TestCollector_Collect(t *testing.T) {
 	t.Run("Database connection fails", func(t *testing.T) {
 		col := NewCollector(log.NewJSONLogger(os.Stdout), &Config{})
 
-		openErr := errors.New("failed to open database")
-		col.openDatabase = func(_ string) (*sql.DB, error) { return nil, openErr }
+		openErr := col.openDB()
+		require.Error(t, openErr)
 
 		f, err := os.Open(filepath.Join("testdata", "query_failure.prom"))
 		require.NoError(t, err)
