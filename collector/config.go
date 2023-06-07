@@ -21,27 +21,20 @@ import (
 )
 
 type Config struct {
-	Instance     string
 	DSN          string
 	DatabaseName string
 }
 
 var (
-	errNoInstance = errors.New("instance must be specified")
-	errNoDSN      = errors.New("dsn must be specified")
-	errNoHost     = errors.New("HOST must be specified in the dsn")
-	errNoDatabase = errors.New("DATABASE must be specified in the dsn")
-	errNoPort     = errors.New("PORT must be specified in the dsn")
-	errNoUID      = errors.New("UID must be specified in the dsn")
-	errNoPWD      = errors.New("PWD must be specified in the dsn")
-	errDSNTooLong = errors.New("dsn contains too many parts; must be of form: \"HOSTNAME=host;DATABASE=name;PORT=number;UID=username;PWD=password\"")
+	errNoDSN      = errors.New("DSN must be specified")
+	errNoHost     = errors.New("HOST must be specified in the DSN")
+	errNoDatabase = errors.New("DATABASE must be specified in the DSN")
+	errNoPort     = errors.New("PORT must be specified in the DSN")
+	errNoUID      = errors.New("UID must be specified in the DSN")
+	errNoPWD      = errors.New("PWD must be specified in the DSN")
 )
 
 func (c Config) Validate() error {
-	if c.Instance == "" {
-		return errNoInstance
-	}
-
 	if c.DSN == "" {
 		return errNoDSN
 	}
@@ -58,9 +51,6 @@ func (c Config) Validate() error {
 // verifies that they were all present
 func parseDSN(dsn string) (string, error) {
 	pairs := strings.Split(dsn, ";")
-	if len(pairs) > 5 {
-		return "", errDSNTooLong
-	}
 
 	// loops through pairs, only adds to map if key is assigned a val
 	var values = map[string]string{}
