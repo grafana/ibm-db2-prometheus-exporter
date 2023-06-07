@@ -46,10 +46,10 @@ func openIBMDBDatabase(connStr string) (*sql.DB, error) {
 }
 
 type Collector struct {
-	config       *Config
-	logger       log.Logger
-	openDatabase func(string) (*sql.DB, error)
-	dbName       string
+	config *Config
+	logger log.Logger
+	dbName string
+	db     *sql.DB
 
 	applicationActive    *prometheus.Desc
 	applicationExecuting *prometheus.Desc
@@ -66,13 +66,21 @@ type Collector struct {
 	dbUp                 *prometheus.Desc
 }
 
+func (c *Collector) openDB() error {
+	db, err := sql.Open("go_ibm_db", c.config.DSN)
+	if err != nil {
+		return err
+	}
+	c.db = db
+	return nil
+}
+
 // NewCollector creates a new collector from the given config
 func NewCollector(logger log.Logger, cfg *Config) *Collector {
 	return &Collector{
-		config:       cfg,
-		logger:       logger,
-		openDatabase: openIBMDBDatabase,
-		dbName:       cfg.DatabaseName,
+		config: cfg,
+		logger: logger,
+		dbName: cfg.DatabaseName,
 		applicationActive: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "application", "active"),
 			"The number of applications that are currently connected to the database.",
@@ -178,47 +186,45 @@ func (c *Collector) Collect(metrics chan<- prometheus.Metric) {
 	level.Debug(c.logger).Log("msg", "Starting to collect metrics.")
 
 	var up float64 = 1
-
-	db, err := c.openDatabase(c.config.DSN)
+	err := c.openDB()
 	if err != nil {
 		level.Error(c.logger).Log("msg", "Failed to connect to DB2.", "err", err)
 		metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, 0, c.dbName)
 		return
 	}
+	defer c.db.Close()
 
-	defer db.Close()
-
-	if err := c.collectDatabaseMetrics(db, metrics); err != nil {
+	if err := c.collectDatabaseMetrics(metrics); err != nil {
 		level.Error(c.logger).Log("msg", "Failed to collect general database metrics.", "err", err)
 		up = 0
 	}
 
-	if err := c.collectApplicationMetrics(db, metrics); err != nil {
+	if err := c.collectApplicationMetrics(metrics); err != nil {
 		level.Error(c.logger).Log("msg", "Failed to collect application metrics.", "err", err)
 		up = 0
 	}
 
-	if err := c.collectLockMetrics(db, metrics); err != nil {
+	if err := c.collectLockMetrics(metrics); err != nil {
 		level.Error(c.logger).Log("msg", "Failed to collect lock metrics.", "err", err)
 		up = 0
 	}
 
-	if err := c.collectRowMetrics(db, metrics); err != nil {
+	if err := c.collectRowMetrics(metrics); err != nil {
 		level.Error(c.logger).Log("msg", "Failed to collect row operation metrics.", "err", err)
 		up = 0
 	}
 
-	if err := c.collectTablespaceStorageMetrics(db, metrics); err != nil {
+	if err := c.collectTablespaceStorageMetrics(metrics); err != nil {
 		level.Error(c.logger).Log("msg", "Failed to collect tablespace storage metrics.", "err", err)
 		up = 0
 	}
 
-	if err := c.collectLogsMetrics(db, metrics); err != nil {
+	if err := c.collectLogsMetrics(metrics); err != nil {
 		level.Error(c.logger).Log("msg", "Failed to collect log metrics.", "err", err)
 		up = 0
 	}
 
-	if err := c.collectBufferpoolMetrics(db, metrics); err != nil {
+	if err := c.collectBufferpoolMetrics(metrics); err != nil {
 		level.Error(c.logger).Log("msg", "Failed to collect bufferpool metrics.", "err", err)
 		up = 0
 	}
@@ -226,8 +232,8 @@ func (c *Collector) Collect(metrics chan<- prometheus.Metric) {
 	metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, up, c.dbName)
 }
 
-func (c *Collector) collectDatabaseMetrics(db *sql.DB, metrics chan<- prometheus.Metric) error {
-	rows, err := db.Query(databaseTableMetricsQuery)
+func (c *Collector) collectDatabaseMetrics(metrics chan<- prometheus.Metric) error {
+	rows, err := c.db.Query(databaseTableMetricsQuery)
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
@@ -246,8 +252,8 @@ func (c *Collector) collectDatabaseMetrics(db *sql.DB, metrics chan<- prometheus
 	return rows.Err()
 }
 
-func (c *Collector) collectApplicationMetrics(db *sql.DB, metrics chan<- prometheus.Metric) error {
-	rows, err := db.Query(applicationMetricsQuery)
+func (c *Collector) collectApplicationMetrics(metrics chan<- prometheus.Metric) error {
+	rows, err := c.db.Query(applicationMetricsQuery)
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
@@ -266,8 +272,8 @@ func (c *Collector) collectApplicationMetrics(db *sql.DB, metrics chan<- prometh
 	return rows.Err()
 }
 
-func (c *Collector) collectLockMetrics(db *sql.DB, metrics chan<- prometheus.Metric) error {
-	rows, err := db.Query(lockMetricsQuery)
+func (c *Collector) collectLockMetrics(metrics chan<- prometheus.Metric) error {
+	rows, err := c.db.Query(lockMetricsQuery)
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
@@ -288,8 +294,8 @@ func (c *Collector) collectLockMetrics(db *sql.DB, metrics chan<- prometheus.Met
 	return rows.Err()
 }
 
-func (c *Collector) collectRowMetrics(db *sql.DB, metrics chan<- prometheus.Metric) error {
-	rows, err := db.Query(rowMetricsQuery)
+func (c *Collector) collectRowMetrics(metrics chan<- prometheus.Metric) error {
+	rows, err := c.db.Query(rowMetricsQuery)
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
@@ -310,8 +316,8 @@ func (c *Collector) collectRowMetrics(db *sql.DB, metrics chan<- prometheus.Metr
 	return rows.Err()
 }
 
-func (c *Collector) collectTablespaceStorageMetrics(db *sql.DB, metrics chan<- prometheus.Metric) error {
-	rows, err := db.Query(tablespaceStorageMetricsQuery)
+func (c *Collector) collectTablespaceStorageMetrics(metrics chan<- prometheus.Metric) error {
+	rows, err := c.db.Query(tablespaceStorageMetricsQuery)
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
@@ -332,20 +338,20 @@ func (c *Collector) collectTablespaceStorageMetrics(db *sql.DB, metrics chan<- p
 	return rows.Err()
 }
 
-func (c *Collector) collectLogsMetrics(db *sql.DB, metrics chan<- prometheus.Metric) error {
-	rows, err := db.Query(logsMetricsQuery)
+func (c *Collector) collectLogsMetrics(metrics chan<- prometheus.Metric) error {
+	rows, err := c.db.Query(logsMetricsQuery)
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var i_member int
+		var iMember int
 		var available, used, reads, writes float64
-		if err := rows.Scan(&i_member, &available, &used, &reads, &writes); err != nil {
+		if err := rows.Scan(&iMember, &available, &used, &reads, &writes); err != nil {
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
-		member := strconv.Itoa(i_member)
+		member := strconv.Itoa(iMember)
 
 		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, available, c.dbName, member, "available")
 		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, used, c.dbName, member, "used")
@@ -356,8 +362,8 @@ func (c *Collector) collectLogsMetrics(db *sql.DB, metrics chan<- prometheus.Met
 	return rows.Err()
 }
 
-func (c *Collector) collectBufferpoolMetrics(db *sql.DB, metrics chan<- prometheus.Metric) error {
-	rows, err := db.Query(bufferpoolMetricsQuery)
+func (c *Collector) collectBufferpoolMetrics(metrics chan<- prometheus.Metric) error {
+	rows, err := c.db.Query(bufferpoolMetricsQuery)
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
