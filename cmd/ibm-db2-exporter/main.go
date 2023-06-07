@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+// TODO: add go build tag
 
 package main
 
@@ -36,6 +37,7 @@ var (
 	webConfig  = webflag.AddFlags(kingpin.CommandLine, ":9953")
 	metricPath = kingpin.Flag("web.telemetry-path", "Path under which to expose metrics.").Default("/metrics").Envar("IBM_DB2_EXPORTER_WEB_TELEMETRY_PATH").String()
 	dsn        = kingpin.Flag("dsn", "The connection string (data source name) to use to connect to the database when querying metrics.").Envar("IBM_DB2_EXPORTER_DSN").Required().String()
+
 	// database  = kingpin.Flag("database", "The name of the database to connect to when querying metrics.").Envar("IBM_DB2_EXPORTER_DATABASE").Required().String()
 	// host      = kingpin.Flag("host", "The name of the host used to connect to the database when querying metrics.").Envar("IBM_DB2_EXPORTER_HOST").Required().String()
 	// port      = kingpin.Flag("port", "The number of the port used to connect to the database when querying metrics.").Envar("IBM_DB2_EXPORTER_PORT").Required().String()
@@ -47,8 +49,9 @@ var (
 const (
 	// The name of the exporter.
 	exporterName    = "ibm_db2_exporter"
-	landingPageHtml = `<html>
-	<head><title>IBM DB2 exporter</title></head>
+	landingPageHtml = `
+	<html>
+		<head><title>IBM DB2 exporter</title></head>
 		<body>
 			<h1>IBM DB2 exporter</h1>
 			<p><a href='%s'>Metrics</a></p>
