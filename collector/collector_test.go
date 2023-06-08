@@ -11,7 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//TODO: add go build tag
+
+//go:build !arm64
 
 package collector
 
@@ -36,11 +37,6 @@ func TestCollector_Collect(t *testing.T) {
 
 		col := NewCollector(log.NewJSONLogger(os.Stdout), &Config{})
 		col.db = db
-
-		// writing metrics
-		// reg := prometheus.NewRegistry()
-		// reg.MustRegister(col)
-		// prometheus.WriteToTextfile(filepath.Join("testdata", "all_metrics.prom"), reg)
 
 		// reading in & comparing metrics
 		f, err := os.Open(filepath.Join("testdata", "all_metrics.prom"))
@@ -67,11 +63,6 @@ func TestCollector_Collect(t *testing.T) {
 
 		col := NewCollector(log.NewJSONLogger(os.Stdout), &Config{})
 		col.db = db
-
-		// writing metrics
-		// reg := prometheus.NewRegistry()
-		// reg.MustRegister(col)
-		// prometheus.WriteToTextfile(filepath.Join("testdata", "query_failure.prom"), reg)
 
 		// reading in & comparing metrics
 		f, err := os.Open(filepath.Join("testdata", "query_failure.prom"))

@@ -11,7 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// TODO: add go build tag
+
+//go:build !arm64
 
 package main
 
@@ -85,7 +86,6 @@ func main() {
 }
 
 func serveMetrics(logger log.Logger) {
-
 	landingPage := []byte(fmt.Sprintf(landingPageHtml, *metricPath))
 
 	http.Handle(*metricPath, promhttp.Handler())
