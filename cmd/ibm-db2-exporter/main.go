@@ -37,6 +37,7 @@ var (
 	webConfig  = webflag.AddFlags(kingpin.CommandLine, ":9953")
 	metricPath = kingpin.Flag("web.telemetry-path", "Path under which to expose metrics.").Default("/metrics").Envar("IBM_DB2_EXPORTER_WEB_TELEMETRY_PATH").String()
 	dsn        = kingpin.Flag("dsn", "The connection string (data source name) to use to connect to the database when querying metrics.").Envar("IBM_DB2_EXPORTER_DSN").Required().String()
+	db         = kingpin.Flag("db", "The database to connect to when querying metrics.").Envar("IBM_DB2_EXPORTER_DB").Required().String()
 )
 
 const (
@@ -65,7 +66,8 @@ func main() {
 
 	// Construct the collector, using the flags for configuration
 	c := &collector.Config{
-		DSN: *dsn,
+		DSN:          *dsn,
+		DatabaseName: *db,
 	}
 
 	if err := c.Validate(); err != nil {
