@@ -19,6 +19,7 @@ The exporter may be configured through its command line flags (run with -h to se
                                  Path under which to expose metrics. ($IBM_DB2_EXPORTER_WEB_TELEMETRY_PATH)
       --dsn=DSN                  The connection string (data source name) to use to connect to the database when
                                  querying metrics. ($IBM_DB2_EXPORTER_DSN)
+      --db=DB                    The database to connect to when querying metrics. ($IBM_DB2_EXPORTER_DB)
       --[no-]version             Show application version.
       --log.level=info           Only log messages with the given severity or above. One of: [debug, info, warn,
                                  error]
@@ -27,13 +28,14 @@ The exporter may be configured through its command line flags (run with -h to se
 
 Example usage:
 ```
-./ibm_db2_exporter --dsn="DATABASE=database;HOSTNAME=localhost;PORT=50000;UID=user;PWD=password;"
+./ibm_db2_exporter --db="database" --dsn="DATABASE=database;HOSTNAME=localhost;PORT=50000;UID=user;PWD=password;"
 ```
 ## Environment Variables:
 
-You can also set the DSN as an environment variable and then run the exporter:  
+You can also set the DSN and DB as environment variables and then run the exporter:  
 ```
 IBM_DB2_EXPORTER_DSN="DATABASE=database;HOSTNAME=localhost;PORT=50000;UID=user;PWD=password;"  
+IBM_DB2_EXPORTER_DB="database"  
 
 ./ibm_db2_exporter
 ```
