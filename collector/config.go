@@ -27,8 +27,8 @@ type Config struct {
 
 var (
 	errNoDSN      = errors.New("DSN must be specified")
-	errNoHost     = errors.New("HOSTNAME must be specified in the DSN")
 	errNoDatabase = errors.New("DATABASE must be specified in the DSN")
+	errNoHostname = errors.New("HOSTNAME must be specified in the DSN")
 	errNoPort     = errors.New("PORT must be specified in the DSN")
 	errNoUID      = errors.New("UID must be specified in the DSN")
 	errNoPWD      = errors.New("PWD must be specified in the DSN")
@@ -61,12 +61,12 @@ func parseDSN(dsn string) (string, error) {
 		}
 	}
 
-	// verify that all parts of the DSN string were present
-	if _, ok := values["HOSTNAME"]; !ok {
-		return "", errNoHost
-	}
+	// verify that all essential parts of the DSN string were present
 	if _, ok := values["DATABASE"]; !ok {
 		return "", errNoDatabase
+	}
+	if _, ok := values["HOSTNAME"]; !ok {
+		return "", errNoHostname
 	}
 	if _, ok := values["PORT"]; !ok {
 		return "", errNoPort

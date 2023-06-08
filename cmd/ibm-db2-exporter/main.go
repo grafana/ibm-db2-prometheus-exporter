@@ -37,13 +37,6 @@ var (
 	webConfig  = webflag.AddFlags(kingpin.CommandLine, ":9953")
 	metricPath = kingpin.Flag("web.telemetry-path", "Path under which to expose metrics.").Default("/metrics").Envar("IBM_DB2_EXPORTER_WEB_TELEMETRY_PATH").String()
 	dsn        = kingpin.Flag("dsn", "The connection string (data source name) to use to connect to the database when querying metrics.").Envar("IBM_DB2_EXPORTER_DSN").Required().String()
-
-	// database  = kingpin.Flag("database", "The name of the database to connect to when querying metrics.").Envar("IBM_DB2_EXPORTER_DATABASE").Required().String()
-	// host      = kingpin.Flag("host", "The name of the host used to connect to the database when querying metrics.").Envar("IBM_DB2_EXPORTER_HOST").Required().String()
-	// port      = kingpin.Flag("port", "The number of the port used to connect to the database when querying metrics.").Envar("IBM_DB2_EXPORTER_PORT").Required().String()
-	// uid       = kingpin.Flag("username", "The username or uid used to connect to the database when querying metrics").Envar("IBM_DB2_EXPORTER_USERNAME").Required().String()
-	// pwd       = kingpin.Flag("password", "The password used to connect to the database when querying metrics").Envar("IBM_DB2_EXPORTER_PASSWORD").Required().String()
-	// dsnaddons = kingpin.Flag("dsnaddons", "Additional DSN fields used to connect to the database when querying metrics").Envar("IBM_DB2_EXPORTER_PASSWORD").String()
 )
 
 const (

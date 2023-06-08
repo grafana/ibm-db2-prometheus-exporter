@@ -1,3 +1,6 @@
+# Binary from `make exporter` in ./Makefile
+bin
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -12,7 +15,7 @@
 *.test
 
 # Build artifact from `make build`
-/snowflake-exporter
+/ibm-db2-exporter
 
 # build artifacts from `promu crossbuild`
 .build

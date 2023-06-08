@@ -28,17 +28,18 @@ func TestConfig_Validate(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			name: "It just works.",
+			name: "Correct dsn",
 			inputConfig: Config{
 				DSN: "HOSTNAME=localhost;PORT=3333;DATABASE=sample;UID=admin;PWD=password",
 			},
+			expectedErr: nil,
 		},
 		{
 			name: "no hostname",
 			inputConfig: Config{
 				DSN: "PORT=3333;DATABASE=sample;UID=admin;PWD=password",
 			},
-			expectedErr: errNoHost,
+			expectedErr: errNoHostname,
 		},
 		{
 			name: "no port",
