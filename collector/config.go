@@ -17,7 +17,6 @@ package collector
 
 import (
 	"errors"
-	"strings"
 )
 
 type Config struct {
@@ -27,11 +26,7 @@ type Config struct {
 
 var (
 	errNoDSN      = errors.New("DSN must be specified")
-	errNoDatabase = errors.New("DATABASE must be specified in the DSN")
-	errNoHostname = errors.New("HOSTNAME must be specified in the DSN")
-	errNoPort     = errors.New("PORT must be specified in the DSN")
-	errNoUID      = errors.New("UID must be specified in the DSN")
-	errNoPWD      = errors.New("PWD must be specified in the DSN")
+	errNoDatabase = errors.New("DATABASE must be specified")
 )
 
 func (c *Config) Validate() error {
@@ -39,44 +34,9 @@ func (c *Config) Validate() error {
 		return errNoDSN
 	}
 
-	d, err := parseDSN(c.DSN)
-	if err != nil {
-		return err
+	if c.DatabaseName == "" {
+		return errNoDatabase
 	}
-	c.DatabaseName = d
+
 	return nil
-}
-
-// parses values out of DSN config variable
-// verifies that they were all present
-func parseDSN(dsn string) (string, error) {
-	pairs := strings.Split(dsn, ";")
-
-	// loops through pairs, only adds to map if key is assigned a val
-	var values = map[string]string{}
-	for _, p := range pairs {
-		pair := strings.Split(p, "=")
-		if len(pair) == 2 {
-			values[pair[0]] = pair[1]
-		}
-	}
-
-	// verify that all essential parts of the DSN string were present
-	if _, ok := values["DATABASE"]; !ok {
-		return "", errNoDatabase
-	}
-	if _, ok := values["HOSTNAME"]; !ok {
-		return "", errNoHostname
-	}
-	if _, ok := values["PORT"]; !ok {
-		return "", errNoPort
-	}
-	if _, ok := values["UID"]; !ok {
-		return "", errNoUID
-	}
-	if _, ok := values["PWD"]; !ok {
-		return "", errNoPWD
-	}
-
-	return values["DATABASE"], nil
 }

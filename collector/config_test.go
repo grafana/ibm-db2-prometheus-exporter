@@ -28,50 +28,25 @@ func TestConfig_Validate(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			name: "Correct dsn",
+			name: "valid config",
 			inputConfig: Config{
-				DSN: "HOSTNAME=localhost;PORT=3333;DATABASE=sample;UID=admin;PWD=password",
+				DSN:          "DATABASE=database;HOSTNAME=localhost;PORT=3333;UID=admin;PWD=password",
+				DatabaseName: "database",
 			},
 			expectedErr: nil,
 		},
 		{
-			name: "no hostname",
-			inputConfig: Config{
-				DSN: "PORT=3333;DATABASE=sample;UID=admin;PWD=password",
-			},
-			expectedErr: errNoHostname,
-		},
-		{
-			name: "no port",
-			inputConfig: Config{
-				DSN: "HOSTNAME=localhost;DATABASE=sample;UID=admin;PWD=password",
-			},
-			expectedErr: errNoPort,
-		},
-		{
 			name: "no database",
 			inputConfig: Config{
-				DSN: "HOSTNAME=localhost;PORT=3333;UID=admin;PWD=password",
+				DSN: "DATABASE=database;HOSTNAME=localhost;PORT=3333;UID=admin;PWD=password",
 			},
 			expectedErr: errNoDatabase,
 		},
 		{
-			name: "no uid",
+			name: "no dsn",
 			inputConfig: Config{
-				DSN: "HOSTNAME=localhost;PORT=3333;DATABASE=sample;PWD=password",
+				DatabaseName: "database",
 			},
-			expectedErr: errNoUID,
-		},
-		{
-			name: "no pwd",
-			inputConfig: Config{
-				DSN: "HOSTNAME=localhost;PORT=3333;DATABASE=sample;UID=admin",
-			},
-			expectedErr: errNoPWD,
-		},
-		{
-			name:        "no dsn",
-			inputConfig: Config{},
 			expectedErr: errNoDSN,
 		},
 	}
