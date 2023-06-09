@@ -50,6 +50,22 @@ func TestConfig_Validate(t *testing.T) {
 			},
 			expectedErr: errNoDSN,
 		},
+		{
+			name: "empty DSN",
+			inputConfig: Config{
+				DSN:          "",
+				DatabaseName: "database",
+			},
+			expectedErr: errNoDSN,
+		},
+		{
+			name: "empty DatabaseName",
+			inputConfig: Config{
+				DSN:          "DATABASE=database;HOSTNAME=localhost;PORT=3333;UID=admin;PWD=password",
+				DatabaseName: "",
+			},
+			expectedErr: errNoDatabase,
+		},
 	}
 
 	for _, tc := range testCases {

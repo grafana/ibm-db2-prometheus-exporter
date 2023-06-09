@@ -30,6 +30,8 @@ Example usage:
 ```
 ./ibm_db2_exporter --db="database" --dsn="DATABASE=database;HOSTNAME=localhost;PORT=50000;UID=user;PWD=password;"
 ```
+
+Note that this exporter does not verify DSN strings, if you have trouble connecting, make sure your DSN is configured correctly. 
 ## Environment Variables:
 
 You can also set the DSN and DB as environment variables and then run the exporter:  
