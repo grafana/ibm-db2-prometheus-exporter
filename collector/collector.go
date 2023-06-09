@@ -73,6 +73,9 @@ func (c *Collector) openDB() error {
 		return err
 	}
 	c.db = db
+	if err = c.db.Ping(); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -187,11 +190,13 @@ func (c *Collector) Collect(metrics chan<- prometheus.Metric) {
 	level.Debug(c.logger).Log("msg", "Starting to collect metrics.")
 
 	var up float64 = 1
-	err := c.openDB()
-	if err != nil {
-		level.Error(c.logger).Log("msg", "Failed to connect to DB2.", "err", err)
-		metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, 0, c.dbName)
-		return
+	if c.db == nil {
+		err := c.openDB()
+		if err != nil {
+			level.Error(c.logger).Log("msg", "Failed to connect to DB2.", "err", err)
+			metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, 0, c.dbName)
+			return
+		}
 	}
 	defer c.db.Close()
 
