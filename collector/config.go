@@ -26,8 +26,8 @@ type Config struct {
 }
 
 var (
-	errNoDSN      = errors.New("DSN must be specified")
-	errNoDatabase = errors.New("DATABASE must be specified")
+	errNoDSN      = errors.New("DSN must be specified and not empty")
+	errNoDatabase = errors.New("DATABASE must be specified and not empty")
 )
 
 func (c *Config) Validate() error {
