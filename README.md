@@ -25,6 +25,7 @@ The exporter may be configured through its command line flags (run with -h to se
                                  error]
       --log.format=logfmt        Output format of log messages. One of: [logfmt, json]
 ```
+**Note:** `--dsn` and `--db` are required flags, if not set as environment variables.
 
 Example usage:
 ```
