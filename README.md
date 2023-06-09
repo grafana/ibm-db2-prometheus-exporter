@@ -3,7 +3,7 @@ Exports [IBM DB2](https://www.ibm.com/products/db2/database?utm_content=SRCWW&p1
 
 # Prerequisites
 
-The [go_ibm_db driver](https://github.com/ibmdb/go_ibm_db) needs to be installed to connect to the database: 
+The [go_ibm_db driver](https://github.com/ibmdb/go_ibm_db) needs installed C library files in order to connect to the database. A minimal setup could be provided via using the [clidriver](https://github.com/ibmdb/go_ibm_db/blob/master/installer/setup.go).
 ```
 go install github.com/ibmdb/go_ibm_db/installer@latest
 ```
