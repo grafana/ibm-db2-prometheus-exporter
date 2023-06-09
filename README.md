@@ -1,7 +1,27 @@
 # **ibm-db2-prometheus-exporter**
 Exports [IBM DB2](https://www.ibm.com/products/db2/database?utm_content=SRCWW&p1=Search&p4=43700074899141970&p5=e&gclid=CjwKCAjw1YCkBhAOEiwA5aN4ARNs41KBBnhWj6dwPb2TECYFb3E_InKMe6mdSMBIPqJ4NWPsoqyIuRoCQmkQAvD_BwE&gclsrc=aw.ds) metrics via HTTP for Prometheus consumption.
 
-# Configuration 
+# Prerequisites
+
+The [go_ibm_db driver](https://github.com/ibmdb/go_ibm_db) needs to be installed to connect to the database: 
+```
+go install github.com/ibmdb/go_ibm_db/installer@latest
+```
+
+Make sure to have the clidriver set up:
+```
+cd go/pkg/mod/github.com/ibmdb/go_ibm_db\@latest/installer && go run setup.go
+```
+
+Set the following environment variables before running the exporter:
+```
+LD_LIBRARY_PATH=go/pkg/mod/github.com/ibmdb/clidriver/lib
+CGO_LDFLAGS=-L/usr/local/go/pkg/mod/github.com/ibmdb/tmp/clidriver/lib
+CGO_CFLAGS=-I/usr/local/go/pkg/mod/github.com/ibmdb/clidriver/include
+```
+
+# Configuration
+
 You can build a binary of the exporter by running `make exporter` in this directory.
 ## Command line flags
 
