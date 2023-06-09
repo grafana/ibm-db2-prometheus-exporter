@@ -14,7 +14,11 @@ Make sure to have the clidriver set up:
 cd go/pkg/mod/github.com/ibmdb/go_ibm_db\@latest/installer && go run setup.go
 ```
 
-Set the following environment variables before running the exporter:
+
+## Required environment variables
+
+Set the following environment variables before running the exporter in order for the driver to work:
+
 ```
 LD_LIBRARY_PATH=go/pkg/mod/github.com/ibmdb/clidriver/lib
 CGO_LDFLAGS=-L/usr/local/go/pkg/mod/github.com/ibmdb/tmp/clidriver/lib
