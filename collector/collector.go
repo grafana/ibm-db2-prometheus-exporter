@@ -199,6 +199,7 @@ func (c *Collector) Collect(metrics chan<- prometheus.Metric) {
 		}
 	}
 	defer c.db.Close()
+	defer func() { c.db = nil }()
 
 	if err := c.collectDatabaseMetrics(metrics); err != nil {
 		level.Error(c.logger).Log("msg", "Failed to collect general database metrics.", "err", err)
