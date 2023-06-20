@@ -3,13 +3,14 @@
 The IBM DB2 mixin consists of a configurable Grafana dashboard and alerts based on the [IBM DB2 exporter](../README.md).
 
 The IBM DB2 mixin contains the following dashboards:
+
 - IBM DB2 overview
 
 ## IBM DB2 overview
 The IBM DB2 overview dashboard provides details about the general state of the database like bufferpool hit ratio, active connections, and deadlocks.
 
-![First screenshot of the overview dashboard](https://storage.googleapis.com/grafanalabs-integration-assets/snowflake/screenshots/ibm_db2_overview_1.png)
-![Second screenshot of the overview dashboard](https://storage.googleapis.com/grafanalabs-integration-assets/snowflake/screenshots/ibm_db2_overview_2.png)
+![First screenshot of the overview dashboard]()
+![Second screenshot of the overview dashboard]()
 
 ## Install tools
 ```bash
