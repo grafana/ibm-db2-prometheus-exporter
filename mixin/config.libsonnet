@@ -6,9 +6,9 @@
     dashboardRefresh: '1m',
 
     // alerts thresholds
-    alertsHighLockWaitTime: 2000,
-    alertsHighNumberOfDeadlocks: 5,
-    alertsLogUsageReachingLimit: 90,
+    alertsHighLockWaitTime: 2000, //ms
+    alertsHighNumberOfDeadlocks: 5, //count
+    alertsLogUsageReachingLimit: 90, //percent 0-100
 
     enableLokiLogs: true,
   },
