@@ -147,7 +147,7 @@ func NewCollector(logger log.Logger, cfg *Config) *Collector {
 		),
 		logUsage: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "log", "usage"),
-			"The disk blocks of active logs pace in the database that is not being used by uncommitted transactions. Each block correlates to 4 KiB blocks of storage.",
+			"The disk blocks of active logs space in the database that is not being used by uncommitted transactions. Each block correlates to 4 KiB blocks of storage.",
 			[]string{labelDatabaseName, labelLogMember, labelLogUsageType},
 			nil,
 		),
