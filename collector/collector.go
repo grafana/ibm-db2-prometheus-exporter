@@ -147,7 +147,7 @@ func NewCollector(logger log.Logger, cfg *Config) *Collector {
 		),
 		logUsage: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "log", "usage"),
-			"The disk blocks of active logs pace in the database that is not being used by uncommitted transactions. Each block correlates to 4 KiB blocks of storage.",
+			"The disk blocks of active logs space in the database that is not being used by uncommitted transactions. Each block correlates to 4 KiB blocks of storage.",
 			[]string{labelDatabaseName, labelLogMember, labelLogUsageType},
 			nil,
 		),
@@ -159,7 +159,7 @@ func NewCollector(logger log.Logger, cfg *Config) *Collector {
 		),
 		dbUp: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "", "up"),
-			"Metric indicating the status of the exporter collection. 1 indicates that the connection to IBM DB2 was successful, and all available metrics were collected. A 0 indicates that the exporter failed to collect 1 or more metrics, due to an inability to connect to IBM DB2.",
+			"Metric indicating the status of the exporter collection. 1 indicates that the connection to IBM DB2 was successful, and all available metrics were collected. A 0 indicates that the exporter failed to collect metrics or to connect to IBM DB2.",
 			[]string{labelDatabaseName},
 			nil,
 		),
