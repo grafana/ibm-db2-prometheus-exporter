@@ -28,8 +28,8 @@ Default thresholds can be configured in `config.libsonnet`.
 ## IBM DB2 overview
 The IBM DB2 overview dashboard provides details about the general state of the database like bufferpool hit ratio, active connections, and deadlocks.
 
-![First screenshot of the overview dashboard]()
-![Second screenshot of the overview dashboard]()
+![First screenshot of the overview dashboard](https://storage.googleapis.com/grafanalabs-integration-assets/ibm-db2/screenshots/ibm-db2-overview-1.png)
+![Second screenshot of the overview dashboard](https://storage.googleapis.com/grafanalabs-integration-assets/ibm-db2/screenshots/ibm-db2-overview-2.png)
 
 ## Logs
 To get IBM DB2 diagnostic logs, [Promtail and Loki needs to be installed](https://grafana.com/docs/loki/latest/installation/) and provisioned for logs with your Grafana instance. The default location of the diagnostic log file depends on the instance of DB2 the database being monitored is in. For single member instances, the location will look like something like this path(depends on where your instance of DB2 is located) `/home/*/sqllib/db2dump/db2diag.log`. For other instances of DB2, the path to the logs file will look like `/home/*/sqllib/db2dump/DIAG*/db2diag.log`. `DIAG*` represents any number of directories that may be present at that level that each contain a log file.
