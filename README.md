@@ -95,3 +95,5 @@ It means the exporter is unable to connect to DB2, however it doesn't know why. 
 
 - Verify that the DSN being used by the exporter is correct for the instance/database of DB2 being monitored.
 - Verify that DB2 is running and all of it's communication protocols are activated.
+
+After making any necessary changes restart the exporter.
