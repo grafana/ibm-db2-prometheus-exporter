@@ -86,12 +86,12 @@ IBM_DB2_EXPORTER_DB="database"
 ```
 
 # Troubleshooting
-Due to the driver used by this exporter, watch out for the following error message:
+
+If you get this error message:
 
 `ping is failing: verify DSN is correct and DB2 is running properly`
 
-When this error appears, it means the exporter is unable to connect to DB2, however it doesn't know why. To fix this error, try one of the following solutions.
+It means the exporter is unable to connect to DB2, however it doesn't know why. To fix this error, please ensure the following:
 
 - Verify that the DSN being used by the exporter is correct for the instance/database of DB2 being monitored.
-- Verify that DB2 is running and all of it's communication protocols are activated. 
-
+- Verify that DB2 is running and all of it's communication protocols are activated.
