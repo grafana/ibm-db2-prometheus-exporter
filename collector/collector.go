@@ -20,6 +20,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strconv"
+	"sync"
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
@@ -42,15 +43,14 @@ const (
 	labelTablespaceType   = "tablespace_type"
 )
 
-func openIBMDBDatabase(connStr string) (*sql.DB, error) {
-	return sql.Open("go_ibm_db", connStr)
-}
-
 type Collector struct {
 	config *Config
 	logger log.Logger
 	dbName string
 	db     *sql.DB
+
+	mu       sync.Mutex
+	pingFail bool
 
 	applicationActive    *prometheus.Desc
 	applicationExecuting *prometheus.Desc
@@ -67,24 +67,13 @@ type Collector struct {
 	dbUp                 *prometheus.Desc
 }
 
-func (c *Collector) openDB() error {
-	db, err := sql.Open("go_ibm_db", c.config.DSN)
-	if err != nil {
-		return err
-	}
-	c.db = db
-	if err = c.db.Ping(); err != nil {
-		return err
-	}
-	return nil
-}
-
 // NewCollector creates a new collector from the given config
 func NewCollector(logger log.Logger, cfg *Config) *Collector {
 	return &Collector{
-		config: cfg,
-		logger: logger,
-		dbName: cfg.DatabaseName,
+		config:   cfg,
+		logger:   logger,
+		dbName:   cfg.DatabaseName,
+		pingFail: false,
 		applicationActive: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "application", "active"),
 			"The number of applications that are currently connected to the database.",
@@ -190,16 +179,12 @@ func (c *Collector) Collect(metrics chan<- prometheus.Metric) {
 	level.Debug(c.logger).Log("msg", "Starting to collect metrics.")
 
 	var up float64 = 1
-	if c.db == nil {
-		err := c.openDB()
-		if err != nil {
-			level.Error(c.logger).Log("msg", "Failed to connect to DB2.", "err", err)
-			metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, 0, c.dbName)
-			return
-		}
+	if err := c.ensureConnection(); err != nil {
+		level.Error(c.logger).Log("msg", "Failed to connect to DB2.", "err", err)
+		metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, 0, c.dbName)
+		return
 	}
-	defer c.db.Close()
-	defer func() { c.db = nil }()
+	defer c.closeConnections()
 
 	if err := c.collectDatabaseMetrics(metrics); err != nil {
 		level.Error(c.logger).Log("msg", "Failed to collect general database metrics.", "err", err)
@@ -237,6 +222,42 @@ func (c *Collector) Collect(metrics chan<- prometheus.Metric) {
 	}
 
 	metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, up, c.dbName)
+}
+
+func (c *Collector) ensureConnection() error {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	if c.pingFail {
+		// ping has failed, continually return err
+		return fmt.Errorf("ping is failing: verify DSN is correct and DB2 is running properly")
+	}
+
+	// mainly here so unit tests work
+	if c.db != nil {
+		return nil
+	}
+
+	db, err := sql.Open("go_ibm_db", c.config.DSN)
+	if err != nil {
+		return err
+	}
+
+	if err = db.Ping(); err != nil {
+		// ping failed, set flag to true
+		c.pingFail = true
+		return err
+	}
+
+	c.db = db
+	return nil
+}
+
+func (c *Collector) closeConnections() {
+	if err := c.db.Close(); err != nil {
+		level.Error(c.logger).Log("msg", "failing to close connection", "err", err)
+	}
+	c.db = nil
 }
 
 func (c *Collector) collectDatabaseMetrics(metrics chan<- prometheus.Metric) error {

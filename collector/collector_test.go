@@ -75,7 +75,7 @@ func TestCollector_Collect(t *testing.T) {
 	t.Run("Database connection fails", func(t *testing.T) {
 		col := NewCollector(log.NewJSONLogger(os.Stdout), &Config{})
 
-		openErr := col.openDB()
+		openErr := col.ensureConnection()
 		require.Error(t, openErr)
 
 		f, err := os.Open(filepath.Join("testdata", "query_failure.prom"))

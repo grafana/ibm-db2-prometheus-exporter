@@ -34,7 +34,7 @@ ibm_db2_log_operations_total{database_name="",log_member="2",log_operation_type=
 ibm_db2_log_operations_total{database_name="",log_member="2",log_operation_type="write"} 9
 ibm_db2_log_operations_total{database_name="",log_member="3",log_operation_type="read"} 3
 ibm_db2_log_operations_total{database_name="",log_member="3",log_operation_type="write"} 4
-# HELP ibm_db2_log_usage The disk blocks of active logs pace in the database that is not being used by uncommitted transactions. Each block correlates to 4 KiB blocks of storage.
+# HELP ibm_db2_log_usage The disk blocks of active logs space in the database that is not being used by uncommitted transactions. Each block correlates to 4 KiB blocks of storage.
 # TYPE ibm_db2_log_usage gauge
 ibm_db2_log_usage{database_name="",log_member="1",log_usage_type="available"} 22
 ibm_db2_log_usage{database_name="",log_member="1",log_usage_type="used"} 33
@@ -59,6 +59,6 @@ ibm_db2_tablespace_usage{database_name="",tablespace_name="tbsp2",tablespace_typ
 ibm_db2_tablespace_usage{database_name="",tablespace_name="tbsp3",tablespace_type="free"} 111
 ibm_db2_tablespace_usage{database_name="",tablespace_name="tbsp3",tablespace_type="total"} 999
 ibm_db2_tablespace_usage{database_name="",tablespace_name="tbsp3",tablespace_type="used"} 222
-# HELP ibm_db2_up Metric indicating the status of the exporter collection. 1 indicates that the connection to IBM DB2 was successful, and all available metrics were collected. A 0 indicates that the exporter failed to collect 1 or more metrics, due to an inability to connect to IBM DB2.
+# HELP ibm_db2_up Metric indicating the status of the exporter collection. 1 indicates that the connection to IBM DB2 was successful, and all available metrics were collected. A 0 indicates that the exporter failed to collect metrics or to connect to IBM DB2.
 # TYPE ibm_db2_up gauge
 ibm_db2_up{database_name=""} 1
