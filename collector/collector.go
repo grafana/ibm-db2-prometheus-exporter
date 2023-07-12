@@ -227,8 +227,11 @@ func (c *Collector) Collect(metrics chan<- prometheus.Metric) {
 func (c *Collector) ensureConnection() error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	// mainly here so unit tests work
+
 	if c.db != nil {
+		// this check is done so unit tests can work
+		// placed after mutex so threads do not jump over this func
+		// can occur when live if Ping takes too long to return
 		return nil
 	}
 
