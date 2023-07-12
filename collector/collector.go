@@ -227,15 +227,14 @@ func (c *Collector) Collect(metrics chan<- prometheus.Metric) {
 func (c *Collector) ensureConnection() error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
+	// mainly here so unit tests work
+	if c.db != nil {
+		return nil
+	}
 
 	if c.pingFail {
 		// ping has failed, continually return err
 		return fmt.Errorf("ping is failing: verify DSN is correct and DB2 is running properly")
-	}
-
-	// mainly here so unit tests work
-	if c.db != nil {
-		return nil
 	}
 
 	db, err := sql.Open("go_ibm_db", c.config.DSN)

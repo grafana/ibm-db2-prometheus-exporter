@@ -97,3 +97,9 @@ It means the exporter is unable to connect to DB2, however it doesn't know why. 
 - Verify that DB2 is running and all of it's communication protocols are activated.
 
 After making any necessary changes restart the exporter.
+
+**Tip:** To verify whether or not the port being used by DB2 is cleared and ready for restart, try the following command.
+```
+netstat -ane | grep "<db2-port>"
+```
+This command will output the state of the port replacing `<db2-port>`. This port is whatever is used in the DSN. The default port that DB2 uses is `50000`.
