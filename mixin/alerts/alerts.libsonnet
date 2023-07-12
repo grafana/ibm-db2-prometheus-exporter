@@ -41,7 +41,7 @@
           {
             alert: 'IBMDB2LogUsageReachingLimit',
             expr: |||
-              100 * sum(ibm_db2_log_usage{log_usage_type="used"}) by (log_member, database_name, instance) / sum(ibm_db2_log_usage{log_usage_type="available"}) by (log_member, database_name, instance) > %(alertsLogUsageReachingLimit)s
+              100 * sum without (job,log_usage_type) (ibm_db2_log_usage{log_usage_type="used"}) / sum without (job,log_usage_type) (ibm_db2_log_usage{log_usage_type="available"}) > %(alertsLogUsageReachingLimit)s
             ||| % $._config,
             'for': '5m',
             labels: {
