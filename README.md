@@ -13,7 +13,8 @@ db2
 activate database sample
 quit
 ```
-To deactivate a database, connect to db2 and run the command `deactivate database <dbname>` and disconnect. Doing so will reset the metrics reported by DB2. The database must be reactivated in order for metrics to be properly incremented, stored, and reported by DB2.
+To deactivate a database, connect to DB2 and run the command `deactivate database <dbname>` and disconnect. Doing so will reset the metrics reported by DB2. The database must be reactivated in order for metrics to be properly incremented, stored, and reported by DB2. This also applies to whenever DB2 is shutdown.
+
 **Note:** Whether or not the database is activated only affects DB2's ability to report metrics, it does not affect DB2's behavior as a database.
 
 ## Driver installation (optional)
@@ -83,3 +84,22 @@ IBM_DB2_EXPORTER_DB="database"
 
 ./ibm_db2_exporter
 ```
+
+# Troubleshooting
+
+If you get this error message:
+
+`ping is failing: verify DSN is correct and DB2 is running properly`
+
+It means the exporter is unable to connect to DB2, however it doesn't know why. To fix this error, please ensure the following:
+
+- Verify that the DSN being used by the exporter is correct for the instance/database of DB2 being monitored.
+- Verify that DB2 is running and all of it's communication protocols are activated.
+
+After making any necessary changes restart the exporter.
+
+**Tip:** To verify whether or not the port being used by DB2 is cleared and ready for restart, try the following command.
+```
+netstat -ane | grep "<db2-port>"
+```
+This command will output the state of the port replacing `<db2-port>`. This port is whatever is used in the DSN. The default port that DB2 uses is `50000`.
