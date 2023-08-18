@@ -54,9 +54,10 @@ affinity: {}
 
 existingSecret: test
 
+# settings for DB2
 db2:
   port: 50000
   userId: db2inst1
   # database: SOMEDB
-  # hostname: someHOst  
+  # hostname: someHost
   # password: somePw - you can also refer to an existingSecret with key DB2PASSWORD

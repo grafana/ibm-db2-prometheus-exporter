@@ -1,14 +1,13 @@
 apiVersion: v2
 name: ibm-db2-prometheus-exporter
 description: A Helm chart for IBM DB2 prometheus exporter
+icon: https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/2066px-Prometheus_software_logo.svg.png
 type: application
-version: 0.1.0
-
-# This is the version number of the application being deployed. This version number should be
-# incremented each time you make changes to the application. Versions are not expected to
-# follow Semantic Versioning. They should reflect the version the application is using.
-# It is recommended to use it with quotes.
-appVersion: "1.16.0"
+version: 0.1.1
+appVersion: "master"
+maintainers:
+  - name: davidkarlsen
+    email: david@davidkarlsen.com
 dependencies:
 - name: common
   repository: oci://registry-1.docker.io/bitnamicharts

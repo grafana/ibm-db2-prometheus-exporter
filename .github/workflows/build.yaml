@@ -6,7 +6,11 @@ on:
       - master
     tags:
       - "v*"
+    paths-ignore:
+      - "charts/**"
   pull_request:
+    paths-ignore:
+      - "charts/**"
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}    

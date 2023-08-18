@@ -4,14 +4,14 @@ on:
     branches:
     - master
     paths:
-    - "charts"
+    - "charts/**"
 
 jobs:
   test:
     strategy:
       fail-fast: false
       matrix:
-        kubernetesVersion: [ "v1.25.2" ]
+        kubernetesVersion: [ "v1.24.15", "v1.28.0" ]
     runs-on: ubuntu-latest
     if: github.ref != 'refs/heads/master'
     steps:

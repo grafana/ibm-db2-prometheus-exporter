@@ -6,7 +6,7 @@ on:
     tags:
       - "chart-*"
     paths:
-      - "charts"
+      - "charts/**"
 
 jobs:
   publish:
