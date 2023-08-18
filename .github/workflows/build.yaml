@@ -31,7 +31,7 @@ jobs:
           docker build . -t imagename
 
       - name: Log in to the Container registry
-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        uses: docker/login-action@553b6f090f15b58451081ce157ff1929a266131d
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
