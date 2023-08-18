@@ -3,7 +3,7 @@ name: ibm-db2-prometheus-exporter
 description: A Helm chart for IBM DB2 prometheus exporter
 icon: https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Prometheus_software_logo.svg/2066px-Prometheus_software_logo.svg.png
 type: application
-version: 0.1.1
+version: 0.1.2
 appVersion: "master"
 maintainers:
   - name: davidkarlsen
