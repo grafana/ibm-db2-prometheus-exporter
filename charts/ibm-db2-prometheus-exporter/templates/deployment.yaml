@@ -27,16 +27,25 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ include "common.images.image" ( dict "imageRoot" .Values.image "global" .Values.global) }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if or .Values.existingSecret .Values.db2.password }}
           envFrom:
           - secretRef:
               name: {{- if .Values.db2.password }} {{ include "common.names.fullname" . }} {{ else }} {{ .Values.existingSecret }} {{ end }}
               optional: false
+          {{- end }}
           env:
           - name: IBM_DB2_EXPORTER_DB
             value: {{ .Values.db2.database | quote }}
           - name: IBM_DB2_EXPORTER_DSN
             value: "DATABASE={{ .Values.db2.database }};HOSTNAME={{ .Values.db2.hostname }};PORT={{ .Values.db2.port }};UID={{ .Values.db2.userId }};PWD=$(DB2PASSWORD)"
-          args: 
+          {{- if .Values.db2.instanceSecret }}
+          - name: DB2PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.db2.instanceSecret }}
+                key: password
+          {{- end }}
+          args:
             {{- toYaml .Values.args | nindent 10 }}
           ports:
           - name: metrics
