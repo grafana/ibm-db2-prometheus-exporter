@@ -1,0 +1,62 @@
+replicaCount: 1
+
+image:
+  registry: ghcr.io
+  repository: davidkarlsen/ibm-db2-prometheus-exporter
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: master
+
+args:
+- --log.level=info
+- --log.format=json
+
+imagePullSecrets: []
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+
+service:
+  type: ClusterIP
+  port: 80
+
+serviceMonitor:
+  create: true
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 5m
+    memory: 64Mi
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+existingSecret: test
+
+db2:
+  port: 50000
+  userId: db2inst1
+  # database: SOMEDB
+  # hostname: someHOst  
+  # password: somePw - you can also refer to an existingSecret with key DB2PASSWORD
