@@ -11,6 +11,9 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      contents: write
     steps:
     - name: Checkout
       uses: actions/checkout@v3
