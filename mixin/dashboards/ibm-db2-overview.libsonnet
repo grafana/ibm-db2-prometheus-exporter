@@ -17,11 +17,11 @@ local lokiDatasource = {
   uid: '${%s}' % lokiDatasourceName,
 };
 
-local upStatusPanel = {
+local upStatusPanel(matcher) = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'ibm_db2_up{job=~"$job",instance=~"$instance", database_name=~"$database_name"}',
+      'ibm_db2_up{' + matcher + '}',
       datasource=promDatasource,
       legendFormat='{{instance}}',
     ),
@@ -80,11 +80,11 @@ local upStatusPanel = {
   pluginVersion: '10.0.1-cloud.2.a7a20fbf',
 };
 
-local activeConnectionsPanel = {
+local activeConnectionsPanel(matcher) = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'ibm_db2_application_active{job=~"$job",instance=~"$instance", database_name=~"$database_name"}',
+      'ibm_db2_application_active{' + matcher + '}',
       datasource=promDatasource,
       legendFormat='{{database_name}}',
     ),
@@ -155,11 +155,11 @@ local activeConnectionsPanel = {
   },
 };
 
-local rowOperationsPanel = {
+local rowOperationsPanel(matcher) = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'increase(ibm_db2_row_total{job=~"$job",instance=~"$instance",database_name=~"$database_name"}[$__interval:])',
+      'increase(ibm_db2_row_total{' + matcher + '}[$__interval:])',
       datasource=promDatasource,
       legendFormat='{{database_name}} - {{row_state}}',
       interval='1m',
@@ -231,11 +231,11 @@ local rowOperationsPanel = {
   },
 };
 
-local bufferpoolHitRatioPanel = {
+local bufferpoolHitRatioPanel(matcher) = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'ibm_db2_bufferpool_hit_ratio{job=~"$job",instance=~"$instance", database_name=~"$database_name"}',
+      'ibm_db2_bufferpool_hit_ratio{' + matcher + '}',
       datasource=promDatasource,
       legendFormat='{{database_name}} - {{bufferpool_name}}',
     ),
@@ -306,11 +306,11 @@ local bufferpoolHitRatioPanel = {
   },
 };
 
-local tablespaceUsagePanel = {
+local tablespaceUsagePanel(matcher) = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'ibm_db2_tablespace_usage{job=~"$job",instance=~"$instance",database_name=~"$database_name",tablespace_type="used"}',
+      'ibm_db2_tablespace_usage{' + matcher + ', tablespace_type="used"}',
       datasource=promDatasource,
       legendFormat='{{database_name}} - {{tablespace_name}}',
     ),
@@ -385,11 +385,11 @@ local tablespaceUsagePanel = {
   },
 };
 
-local averageLockWaitTimePanel = {
+local averageLockWaitTimePanel(matcher) = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'ibm_db2_lock_wait_time{job=~"$job",instance=~"$instance", database_name=~"$database_name"}',
+      'ibm_db2_lock_wait_time{' + matcher + '}',
       datasource=promDatasource,
       legendFormat='{{database_name}}',
     ),
@@ -464,11 +464,11 @@ local averageLockWaitTimePanel = {
   },
 };
 
-local deadlocksPanel = {
+local deadlocksPanel(matcher) = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'increase(ibm_db2_deadlock_total{job=~"$job",instance=~"$instance", database_name=~"$database_name"}[$__interval:])',
+      'increase(ibm_db2_deadlock_total{' + matcher + '}[$__interval:])',
       datasource=promDatasource,
       legendFormat='{{database_name}}',
       interval='1m',
@@ -544,11 +544,11 @@ local deadlocksPanel = {
   },
 };
 
-local locksPanel = {
+local locksPanel(matcher) = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'ibm_db2_lock_usage{job=~"$job",instance=~"$instance",database_name=~"$database_name"}',
+      'ibm_db2_lock_usage{' + matcher + '}',
       datasource=promDatasource,
       legendFormat='{{database_name}} - {{lock_state}}',
     ),
@@ -628,7 +628,7 @@ local logsRow = {
   collapsed: false,
 };
 
-local diagnosticLogsPanel = {
+local diagnosticLogsPanel(matcher) = {
   datasource: lokiDatasource,
   targets: [
     {
@@ -654,11 +654,11 @@ local diagnosticLogsPanel = {
   },
 };
 
-local logStorageUsagePanel = {
+local logStorageUsagePanel(matcher) = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      '100 * sum(ibm_db2_log_usage{job=~"$job",instance=~"$instance", database_name=~"$database_name", log_usage_type="used"}) by (instance, job, database_name) / sum(ibm_db2_log_usage{job=~"$job",instance=~"$instance", database_name=~"$database_name", log_usage_type="available"}) by (instance, job, database_name)',
+      '100 * sum(ibm_db2_log_usage{' + matcher + ', log_usage_type="used"}) by (instance, job, database_name) / sum(ibm_db2_log_usage{' + matcher + ', log_usage_type="available"}) by (instance, job, database_name)',
       datasource=promDatasource,
       legendFormat='{{instance}}',
     ),
@@ -702,11 +702,11 @@ local logStorageUsagePanel = {
   pluginVersion: '10.0.1-cloud.2.a7a20fbf',
 };
 
-local logOperationsPanel = {
+local logOperationsPanel(matcher) = {
   datasource: promDatasource,
   targets: [
     prometheus.target(
-      'increase(ibm_db2_log_operations_total{job=~"$job",instance=~"$instance",database_name=~"$database_name"}[$__interval:])',
+      'increase(ibm_db2_log_operations_total{' + matcher + '}[$__interval:])',
       datasource=promDatasource,
       legendFormat='{{database_name}} - {{log_member}} - {{log_operation_type}}',
       interval='1m',
@@ -778,6 +778,8 @@ local logOperationsPanel = {
   },
 };
 
+local getMatcher(cfg) = '%(ibmdb2Selector)s, instance=~"$instance", database_name=~"$database_name"' % cfg;
+
 {
   grafanaDashboards+:: {
     'ibm-db2-overview.json':
@@ -824,9 +826,21 @@ local logOperationsPanel = {
               sort=0
             ),
             template.new(
+              'cluster',
+              promDatasource,
+              'label_values(ibm_db2_application_active{%(multiclusterSelector)s}, cluster)' % $._config,
+              label='Cluster',
+              refresh=2,
+              includeAll=true,
+              multi=true,
+              allValues='.*',
+              hide=if $._config.enableMultiCluster then '' else 'variable',
+              sort=0
+            ),
+            template.new(
               'instance',
               promDatasource,
-              'label_values(ibm_db2_application_active,instance)',
+              'label_values(ibm_db2_application_active{%(ibmdb2Selector)s},instance)' % $._config,
               label='Instance',
               refresh=1,
               includeAll=false,
@@ -837,7 +851,7 @@ local logOperationsPanel = {
             template.new(
               'database_name',
               promDatasource,
-              'label_values(ibm_db2_application_active,database_name)',
+              'label_values(ibm_db2_application_active{%(ibmdb2Selector)s},database_name)' % $._config,
               label='Database',
               refresh=1,
               includeAll=true,
@@ -851,22 +865,22 @@ local logOperationsPanel = {
       .addPanels(
         std.flattenArrays([
           [
-            upStatusPanel { gridPos: { h: 6, w: 6, x: 0, y: 0 } },
-            activeConnectionsPanel { gridPos: { h: 6, w: 18, x: 6, y: 0 } },
-            rowOperationsPanel { gridPos: { h: 6, w: 12, x: 0, y: 6 } },
-            bufferpoolHitRatioPanel { gridPos: { h: 6, w: 12, x: 12, y: 6 } },
-            tablespaceUsagePanel { gridPos: { h: 6, w: 24, x: 0, y: 12 } },
-            averageLockWaitTimePanel { gridPos: { h: 6, w: 8, x: 0, y: 18 } },
-            deadlocksPanel { gridPos: { h: 6, w: 8, x: 8, y: 18 } },
-            locksPanel { gridPos: { h: 6, w: 8, x: 16, y: 18 } },
+            upStatusPanel(getMatcher($._config)) { gridPos: { h: 6, w: 6, x: 0, y: 0 } },
+            activeConnectionsPanel(getMatcher($._config)) { gridPos: { h: 6, w: 18, x: 6, y: 0 } },
+            rowOperationsPanel(getMatcher($._config)) { gridPos: { h: 6, w: 12, x: 0, y: 6 } },
+            bufferpoolHitRatioPanel(getMatcher($._config)) { gridPos: { h: 6, w: 12, x: 12, y: 6 } },
+            tablespaceUsagePanel(getMatcher($._config)) { gridPos: { h: 6, w: 24, x: 0, y: 12 } },
+            averageLockWaitTimePanel(getMatcher($._config)) { gridPos: { h: 6, w: 8, x: 0, y: 18 } },
+            deadlocksPanel(getMatcher($._config)) { gridPos: { h: 6, w: 8, x: 8, y: 18 } },
+            locksPanel(getMatcher($._config)) { gridPos: { h: 6, w: 8, x: 16, y: 18 } },
             logsRow { gridPos: { h: 1, w: 24, x: 0, y: 24 } },
           ],
           if $._config.enableLokiLogs then [
-            diagnosticLogsPanel { gridPos: { h: 6, w: 24, x: 0, y: 25 } },
+            diagnosticLogsPanel(getMatcher($._config)) { gridPos: { h: 6, w: 24, x: 0, y: 25 } },
           ] else [],
           [
-            logStorageUsagePanel { gridPos: { h: 6, w: 6, x: 0, y: 31 } },
-            logOperationsPanel { gridPos: { h: 6, w: 18, x: 6, y: 31 } },
+            logStorageUsagePanel(getMatcher($._config)) { gridPos: { h: 6, w: 6, x: 0, y: 31 } },
+            logOperationsPanel(getMatcher($._config)) { gridPos: { h: 6, w: 18, x: 6, y: 31 } },
           ],
         ])
       ),
