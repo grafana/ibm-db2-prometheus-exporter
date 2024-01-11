@@ -1,4 +1,5 @@
 # **ibm-db2-prometheus-exporter**
+
 Exports [IBM DB2](https://www.ibm.com/products/db2/database) metrics via HTTP for Prometheus consumption.
 
 **Note:** This exporter is not compatible with ARM64 architectures due to restrictions with the driver.
@@ -7,12 +8,14 @@ Exports [IBM DB2](https://www.ibm.com/products/db2/database) metrics via HTTP fo
 
 The [go_ibm_db driver](https://github.com/ibmdb/go_ibm_db) needs installed C library files in order to connect to the database. A minimal setup could be provided via using the [clidriver](https://github.com/ibmdb/go_ibm_db/blob/master/installer/setup.go).
 
-In order for DB2 to correctly report metric values, the database being monitored must be "explicitly activated". Doing so will make it so that certain metric values are correctly incremented and not periodically reset. However, it does result in a performance impact on the environment DB2 is running in. The size of this impact will depend on the system, but will result in the most accurate data reported by DB2 and, subsequently, this exporter. To explicitly activate a database, connect to DB2 and run the command `activate database <dbname>` and disconnect. Now DB2 will correctly increment and store metrics. 
+In order for DB2 to correctly report metric values, the database being monitored must be "explicitly activated". Doing so will make it so that certain metric values are correctly incremented and not periodically reset. However, it does result in a performance impact on the environment DB2 is running in. The size of this impact will depend on the system, but will result in the most accurate data reported by DB2 and, subsequently, this exporter. To explicitly activate a database, connect to DB2 and run the command `activate database <dbname>` and disconnect. Now DB2 will correctly increment and store metrics.
+
 ```
 db2
 activate database sample
 quit
 ```
+
 To deactivate a database, connect to DB2 and run the command `deactivate database <dbname>` and disconnect. Doing so will reset the metrics reported by DB2. The database must be reactivated in order for metrics to be properly incremented, stored, and reported by DB2. This also applies to whenever DB2 is shutdown.
 
 **Note:** Whether or not the database is activated only affects DB2's ability to report metrics, it does not affect DB2's behavior as a database.
@@ -24,10 +27,10 @@ go install github.com/ibmdb/go_ibm_db/installer@latest
 ```
 
 Make sure to have the clidriver set up:
+
 ```
 cd go/pkg/mod/github.com/ibmdb/go_ibm_db\@latest/installer && go run setup.go
 ```
-
 
 ## Required environment variables
 
@@ -44,9 +47,11 @@ CGO_CFLAGS=-I/usr/local/go/pkg/mod/github.com/ibmdb/clidriver/include
 You can build a binary of the exporter by running `make exporter` in this directory.
 
 **Note:** This exporter only connects to a single database. To monitor multiple databases, each one will need an exporter.
+
 ## Command line flags
 
 The exporter may be configured through its command line flags (run with -h to see options):
+
 ```
   -h, --[no-]help                Show context-sensitive help (also try --help-long and --help-man).
       --[no-]web.systemd-socket  Use systemd socket activation listeners instead of port listeners (Linux only).
@@ -68,19 +73,23 @@ The exporter may be configured through its command line flags (run with -h to se
 ```
 
 Example usage:
+
 ```
 ./ibm_db2_exporter --db="database" --dsn="DATABASE=database;HOSTNAME=localhost;PORT=50000;UID=user;PWD=password;"
 ```
+
 **Note:**
-  - `--dsn` and `--db` are required flags, if not set as environment variables.
-  - This exporter does not verify DSN strings. If you have trouble connecting, make sure the DSN is configured correctly.
+
+- `--dsn` and `--db` are required flags, if not set as environment variables.
+- This exporter does not verify DSN strings. If you have trouble connecting, make sure the DSN is configured correctly.
 
 ## Environment Variables:
 
-You can also set the DSN and DB as environment variables and then run the exporter:  
+You can also set the DSN and DB as environment variables and then run the exporter:
+
 ```
-IBM_DB2_EXPORTER_DSN="DATABASE=database;HOSTNAME=localhost;PORT=50000;UID=user;PWD=password;"  
-IBM_DB2_EXPORTER_DB="database"  
+IBM_DB2_EXPORTER_DSN="DATABASE=database;HOSTNAME=localhost;PORT=50000;UID=user;PWD=password;"
+IBM_DB2_EXPORTER_DB="database"
 
 ./ibm_db2_exporter
 ```
@@ -94,12 +103,14 @@ If you get this error message:
 It means the exporter is unable to connect to DB2, however it doesn't know why. To fix this error, please ensure the following:
 
 - Verify that the DSN being used by the exporter is correct for the instance/database of DB2 being monitored.
-- Verify that DB2 is running and all of it's communication protocols are activated.
+- Verify that DB2 is running and all of its communication protocols are activated.
 
 After making any necessary changes restart the exporter.
 
 **Tip:** To verify whether or not the port being used by DB2 is cleared and ready for restart, try the following command.
+
 ```
 netstat -ane | grep "<db2-port>"
 ```
+
 This command will output the state of the port replacing `<db2-port>`. This port is whatever is used in the DSN. The default port that DB2 uses is `50000`.
