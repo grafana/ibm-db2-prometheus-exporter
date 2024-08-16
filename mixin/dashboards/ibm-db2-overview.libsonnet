@@ -634,7 +634,7 @@ local diagnosticLogsPanel(matcher) = {
     {
       datasource: lokiDatasource,
       editorMode: 'code',
-      expr: '{filename=~"/home/.*/sqllib/db2dump/DIAG.*/db2diag.log|/home/.*/sqllib/db2dump/db2diag.log"} |= ``',
+      expr: '{' + matcher + '} |= `` | (filename=~"/home/.*/sqllib/db2dump/DIAG.*/db2diag.log|/home/.*/sqllib/db2dump/db2diag.log" or log_type="db2diag")',
       queryType: 'range',
       refId: 'A',
     },
