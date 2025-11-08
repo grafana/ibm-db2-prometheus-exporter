@@ -132,7 +132,7 @@ func NewCollector(logger log.Logger, cfg *Config) *Collector {
 		tablespaceUsage: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "tablespace", "usage"),
 			"The size and usage of table space in bytes.",
-			[]string{labelDatabaseName, labelTablespaceName, labelTablespaceType},
+			[]string{labelDatabaseName, labelLogMember,labelHomeHost,labelTablespaceName, labelTablespaceType},
 			nil,
 		),
 		logUsage: prometheus.NewDesc(
@@ -355,15 +355,18 @@ func (c *Collector) collectTablespaceStorageMetrics(metrics chan<- prometheus.Me
 	defer rows.Close()
 
 	for rows.Next() {
+		var iMember int
+		var home_host string
 		var tablespace_name string
 		var total, free, used float64
-		if err := rows.Scan(&tablespace_name, &total, &free, &used); err != nil {
+		if err := rows.Scan(&iMember, &home_host, &tablespace_name, &total, &free, &used); err != nil {
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
+        member := strconv.Itoa(iMember)
 
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, total, c.dbName, tablespace_name, "total")
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, free, c.dbName, tablespace_name, "free")
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, used, c.dbName, tablespace_name, "used")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, total, c.dbName, tablespace_name, member, home_host, "total")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, free, c.dbName, tablespace_name, member, home_host, "free")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, used, c.dbName, tablespace_name, member, home_host, "used")
 	}
 
 	return rows.Err()
