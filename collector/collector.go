@@ -378,16 +378,17 @@ func (c *Collector) collectLogsMetrics(metrics chan<- prometheus.Metric) error {
 
 	for rows.Next() {
 		var iMember int
-		var home_host, available, used, reads, writes float64
+		var home_host string
+		var available, used, reads, writes float64
 		if err := rows.Scan(&iMember, &home_host, &available, &used, &reads, &writes); err != nil {
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
 		member := strconv.Itoa(iMember)
 
 		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, available, c.dbName, member, home_host, "available")
-		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, used, c.dbName, member,home_host, "used")
-		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, reads, c.dbName, member,home_host, "read")
-		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, writes, c.dbName, member,home_host, "write")
+		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, used, c.dbName, member, home_host, "used")
+		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, reads, c.dbName, member, home_host, "read")
+		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, writes, c.dbName, member, home_host, "write")
 	}
 
 	return rows.Err()
