@@ -17,16 +17,19 @@
 package collector
 
 const (
+
+	databaseNoPartitionsMetricsQuery = `SELECT ID, HOME_HOST, DB_PARTITION_NUM FROM TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as T WITH UR`
+
 	databaseTableMetricsQuery = `SELECT
 	SUM(connections_top) as connections_top,
 	SUM(deadlocks) as deadlock_count
-	FROM TABLE(MON_GET_DATABASE(-2))
+	FROM TABLE(MON_GET_DATABASE(-2)) with ur
 	`
 
 	applicationMetricsQuery = `SELECT
 	SUM(appls_cur_cons) as application_active,
 	SUM(appls_in_db2) as application_executing
-	FROM TABLE(MON_GET_DATABASE(-2))
+	FROM TABLE(MON_GET_DATABASE(-2)) with ur
 	`
 
 	lockMetricsQuery = `SELECT
@@ -34,7 +37,7 @@ const (
 	SUM(num_locks_held) as lock_active,
 	SUM(lock_wait_time) as lock_wait_time,
 	SUM(lock_timeouts) as lock_timeout_count
-	FROM TABLE(MON_GET_DATABASE(-2))
+	FROM TABLE(MON_GET_DATABASE(-2)) with ur
 	`
 
 	rowMetricsQuery = `SELECT
@@ -42,7 +45,7 @@ const (
 	SUM(rows_inserted) as rows_inserted,
 	SUM(rows_updated) as rows_updated,
 	SUM(rows_read) as rows_read
-	FROM TABLE(MON_GET_DATABASE(-2))
+	FROM TABLE(MON_GET_DATABASE(-2)) with ur
 	`
 
 	tablespaceStorageMetricsQuery = `SELECT 
@@ -50,17 +53,19 @@ const (
 	(tbsp_total_pages*tbsp_page_size) as total_b, 
 	(tbsp_free_pages*tbsp_page_size) as free_b, 
 	(tbsp_used_pages*tbsp_page_size) as used_b
-	FROM TABLE(MON_GET_TABLESPACE('', -2))
+	FROM TABLE(MON_GET_TABLESPACE('', -2)) WITH UR
 	`
 
-	logsMetricsQuery = `SELECT 
-	member,
-	(total_log_available / 4000) as blocks_available,
-	(total_log_used / 4000) as blocks_used,
-	log_reads,
-	log_writes
-	FROM TABLE(MON_GET_TRANSACTION_LOG(-2))
-	`
+	// #logsMetricsQuery = `SELECT 
+	// member,
+	// (total_log_available / 4000) as blocks_available,
+	// (total_log_used / 4000) as blocks_used,
+	// log_reads,
+	// log_writes
+	// FROM TABLE(MON_GET_TRANSACTION_LOG(-2)) WITH UR
+	// `
+
+	logsMetricsQuery = `SELECT T.member, I.HOME_HOST , (T.total_log_available / 4000) as blocks_available, (T.total_log_used / 4000) as blocks_used, T.log_reads, T.log_writes FROM TABLE(MON_GET_TRANSACTION_LOG(-2)) AS T INNER JOIN  TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as I ON I.DB_PARTITION_NUM = T.MEMBER WITH UR`
 
 	bufferpoolMetricsQuery = `WITH BPMETRICS AS 
 	(
