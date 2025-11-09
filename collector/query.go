@@ -66,13 +66,11 @@ const (
 	// FROM TABLE(MON_GET_TRANSACTION_LOG(-2)) WITH UR
 	// `
 
-	logsMetricsQuery = `SELECT T.member, I.HOME_HOST , (T.total_log_available / 4000) as blocks_available, (T.total_log_used / 4000) as blocks_used, T.log_reads, T.log_writes FROM TABLE(MON_GET_TRANSACTION_LOG(-2)) AS T INNER JOIN  TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as I ON I.DB_PARTITION_NUM = T.MEMBER WITH UR`
+	logsMetricsQuery = `SELECT T.member, I.HOME_HOST , (T.total_log_available / 4000) as blocks_available, (T.total_log_used / 4000) as blocks_used, T.log_reads, T.log_writes FROM TABLE(MON_GET_TRANSACTION_LOG(-2)) AS T INNER JOIN  TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as I ON I.DB_PARTITION_NUM = T.MEMBER WITH UR;`
 
-	bufferpoolMetricsQuery = `db2 "WITH BPMETRICS AS 
-	(
-		SELECT 
-                        member,
-                        bp_name, 
+	bufferpoolMetricsQuery = `WITH BPMETRICS AS (SELECT 
+            member,
+            bp_name, 
 			pool_data_l_reads + pool_temp_data_l_reads +
 			pool_index_l_reads + pool_temp_index_l_reads +
 			pool_xda_l_reads + pool_temp_xda_l_reads as logical_reads,
@@ -92,7 +90,7 @@ const (
 		END AS HIT_RATIO
 	FROM BPMETRICS AS BP INNER JOIN  TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as I ON I.DB_PARTITION_NUM = BP.member WITH UR`
 	
-	//bufferpoolMetricsQuery = `WITH BPMETRICS AS 
+	// bufferpoolMetricsQuery = `WITH BPMETRICS AS 
 	//(
 	//	SELECT 
 	//		bp_name,
