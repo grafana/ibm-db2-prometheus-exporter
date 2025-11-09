@@ -409,7 +409,7 @@ func (c *Collector) collectBufferpoolMetrics(metrics chan<- prometheus.Metric) e
 		var iMember int
 		var home_host string
 		var ratio, foo float64
-		if err := rows.Scan(&iMember, &home_host, &bp_name, &foo, &foo, &foo, &ratio); err != nil {
+		if err := rows.Scan(&iMember, &home_host, &bp_name, &foo, &foo, &ratio); err != nil {
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
 
