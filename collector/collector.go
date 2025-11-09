@@ -406,8 +406,10 @@ func (c *Collector) collectBufferpoolMetrics(metrics chan<- prometheus.Metric) e
 
 	for rows.Next() {
 		var bp_name string
+		var iMember int
+		var home_host string
 		var ratio, foo float64
-		if err := rows.Scan(&bp_name, &foo, &foo, &foo, &ratio); err != nil {
+		if err := rows.Scan(&iMember, &home_host, &bp_name, &foo, &foo, &foo, &ratio); err != nil {
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
 
@@ -415,8 +417,8 @@ func (c *Collector) collectBufferpoolMetrics(metrics chan<- prometheus.Metric) e
 		if ratio == -1 {
 			continue
 		}
-
-		metrics <- prometheus.MustNewConstMetric(c.bufferpoolHitRatio, prometheus.GaugeValue, ratio, c.dbName, bp_name)
+		member := strconv.Itoa(iMember)
+		metrics <- prometheus.MustNewConstMetric(c.bufferpoolHitRatio, prometheus.GaugeValue, ratio, c.dbName, bp_name, member, home_host)
 	}
 
 	return rows.Err()
