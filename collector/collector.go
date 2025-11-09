@@ -419,7 +419,7 @@ func (c *Collector) collectBufferpoolMetrics(metrics chan<- prometheus.Metric) e
 			continue
 		}
 		member := strconv.Itoa(iMember)
-		metrics <- prometheus.MustNewConstMetric(c.bufferpoolHitRatio, prometheus.GaugeValue, ratio, c.dbName, bp_name, member, home_host)
+		metrics <- prometheus.MustNewConstMetric(c.bufferpoolHitRatio, prometheus.GaugeValue, ratio, c.dbName, bp_name, home_host, member)
 	}
 
 	return rows.Err()
