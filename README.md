@@ -20,9 +20,7 @@ To deactivate a database, connect to DB2 and run the command `deactivate databas
 
 **Note:** Whether or not the database is activated only affects DB2's ability to report metrics, it does not affect DB2's behavior as a database.
 
-The ibm-db2-exportor has been tested on Single Partiton Db2, 
-partial on Logical DPF.  Not tested on Physical DPF,
-and  DB2 Purescale. 
+The ibm-db2-exportor has been tested on Single Partiton Db2,  limited testing on Logical DPF and should work Physical DPF  ( shared DB2 ).  DB2 Purescale not testing performed . 
 
 ## Driver installation (optional)
 
