@@ -364,9 +364,9 @@ func (c *Collector) collectTablespaceStorageMetrics(metrics chan<- prometheus.Me
 		}
         member := strconv.Itoa(iMember)
 
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, total, c.dbName, tablespace_name, member, home_host, "total")
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, free, c.dbName, tablespace_name, member, home_host, "free")
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, used, c.dbName, tablespace_name, member, home_host, "used")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, total, c.dbName, member, home_host, tablespace_name, "total")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, free, c.dbName, member, home_host, tablespace_name, "free")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, used, c.dbName, member, home_host, tablespace_name, "used")
 	}
 
 	return rows.Err()
