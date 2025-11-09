@@ -35,7 +35,7 @@ const (
 	labelBufferpoolName   = "bufferpool_name"
 	labelDatabaseName     = "database_name"
 	labelLockState        = "lock_state"
-	labelLogMember        = "log_member"
+	labelMember        	  = "member"
 	labelHomeHost         = "home_host"
 	labelLogOperationType = "log_operation_type"
 	labelLogUsageType     = "log_usage_type"
@@ -120,7 +120,7 @@ func NewCollector(logger log.Logger, cfg *Config) *Collector {
 		bufferpoolHitRatio: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "bufferpool", "hit_ratio"),
 			"The percentage of time that the database manager did not need to load a page from disk to service a page request.",
-			[]string{labelDatabaseName, labelBufferpoolName},
+			[]string{labelDatabaseName,labelMember,labelHomeHost, labelBufferpoolName},
 			nil,
 		),
 		rowCount: prometheus.NewDesc(
@@ -132,19 +132,19 @@ func NewCollector(logger log.Logger, cfg *Config) *Collector {
 		tablespaceUsage: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "tablespace", "usage"),
 			"The size and usage of table space in bytes.",
-			[]string{labelDatabaseName, labelLogMember,labelHomeHost,labelTablespaceName, labelTablespaceType},
+			[]string{labelDatabaseName, labelMember,labelHomeHost,labelTablespaceName, labelTablespaceType},
 			nil,
 		),
 		logUsage: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "log", "usage"),
 			"The disk blocks of active logs space in the database that is not being used by uncommitted transactions. Each block correlates to 4 KiB blocks of storage.",
-			[]string{labelDatabaseName, labelLogMember,labelHomeHost, labelLogUsageType},
+			[]string{labelDatabaseName, labelMember,labelHomeHost, labelLogUsageType},
 			nil,
 		),
 		logOperations: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "log", "operations_total"),
 			"The number of log pages read and written to by the logger.",
-			[]string{labelDatabaseName, labelLogMember,labelHomeHost, labelLogOperationType},
+			[]string{labelDatabaseName, labelMember,labelHomeHost, labelLogOperationType},
 			nil,
 		),
 		dbUp: prometheus.NewDesc(
@@ -408,8 +408,9 @@ func (c *Collector) collectBufferpoolMetrics(metrics chan<- prometheus.Metric) e
 		var bp_name string
 		var iMember int
 		var home_host string
-		var ratio, foo float64
-		if err := rows.Scan(&iMember, &home_host, &bp_name, &foo, &foo, &ratio); err != nil {
+		var ratio float64
+		var physical_reads, logical_reads float64 // dummy variables to scan into
+		if err := rows.Scan(&iMember, &home_host, &bp_name, &logical_reads, &physical_reads,  &ratio); err != nil {
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
 
