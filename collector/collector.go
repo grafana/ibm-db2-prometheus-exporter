@@ -37,7 +37,7 @@ const (
 	labelLockState        = "lock_state"
 	labelMember        	  = "member"
 	labelHomeHost         = "home_host"
-	labelPartitionGroup  =	"partition_group"
+	labelPartitionGroup   =	"partition_group"
 	labelLogOperationType = "log_operation_type"
 	labelLogUsageType     = "log_usage_type"
 	labelRowState         = "row_state"
@@ -390,10 +390,10 @@ func (c *Collector) collectLogsMetrics(metrics chan<- prometheus.Metric) error {
 		}
 		member := strconv.Itoa(iMember)
 
-		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, available, c.dbName, member, home_host,partition_group, "available")
+		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, available, c.dbName, member, home_host, partition_group, "available")
 		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, used, c.dbName, member, home_host, partition_group, "used")
-		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, reads, c.dbName, member, home_host,partition_group, "read")
-		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, writes, c.dbName, member, home_host,partition_group, "write")
+		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, reads, c.dbName, member, home_host, partition_group, "read")
+		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, writes, c.dbName, member, home_host, partition_group, "write")
 	}
 
 	return rows.Err()
