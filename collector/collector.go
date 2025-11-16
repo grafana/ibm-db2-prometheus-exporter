@@ -37,6 +37,7 @@ const (
 	labelLockState        = "lock_state"
 	labelMember        	  = "member"
 	labelHomeHost         = "home_host"
+	labelPartitionGroup  =	"partition_group"
 	labelLogOperationType = "log_operation_type"
 	labelLogUsageType     = "log_usage_type"
 	labelRowState         = "row_state"
@@ -120,7 +121,7 @@ func NewCollector(logger log.Logger, cfg *Config) *Collector {
 		bufferpoolHitRatio: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "bufferpool", "hit_ratio"),
 			"The percentage of time that the database manager did not need to load a page from disk to service a page request.",
-			[]string{labelDatabaseName,labelMember,labelHomeHost, labelBufferpoolName},
+			[]string{labelDatabaseName,labelMember,labelHomeHost, labelPartitionGroup, labelBufferpoolName},
 			nil,
 		),
 		rowCount: prometheus.NewDesc(
@@ -408,9 +409,10 @@ func (c *Collector) collectBufferpoolMetrics(metrics chan<- prometheus.Metric) e
 		var bp_name string
 		var iMember int
 		var home_host string
+		var partition_group string
 		var ratio float64
 		var physical_reads, logical_reads float64 // dummy variables to scan into
-		if err := rows.Scan(&iMember, &home_host, &bp_name, &logical_reads, &physical_reads,  &ratio); err != nil {
+		if err := rows.Scan(&iMember, &home_host, &partition_group, &bp_name, &logical_reads, &physical_reads,  &ratio); err != nil {
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
 

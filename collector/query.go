@@ -52,26 +52,28 @@ const (
 	
 	logsMetricsQuery = `SELECT T.member, I.HOME_HOST , (T.total_log_available / 4000) as blocks_available, (T.total_log_used / 4000) as blocks_used, T.log_reads, T.log_writes FROM TABLE(MON_GET_TRANSACTION_LOG(-2)) AS T INNER JOIN  TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as I ON I.ID = T.MEMBER WITH UR`
 
-	bufferpoolMetricsQuery = `WITH BPMETRICS AS (SELECT 
+	bufferpoolMetricsQuery = `WITH BPMETRICS AS (SELECT
             member,
-            bp_name, 
-			pool_data_l_reads + pool_temp_data_l_reads +
-			pool_index_l_reads + pool_temp_index_l_reads +
-			pool_xda_l_reads + pool_temp_xda_l_reads as logical_reads,
-			pool_data_p_reads + pool_temp_data_p_reads +
-			pool_index_p_reads + pool_temp_index_p_reads +
-			pool_xda_p_reads + pool_temp_xda_p_reads as physical_reads
-		FROM TABLE(MON_GET_BUFFERPOOL('',-2)) AS METRICS
-	)
-	SELECT  BP.member,
-                I.HOME_HOST,
-                VARCHAR(BP.bp_name,25) AS bp_name,
-		BP.logical_reads,
-		BP.physical_reads,
-		CASE WHEN BP.logical_reads > 0
-			THEN DEC((1 - (FLOAT(BP.physical_reads) / FLOAT(BP.logical_reads))) * 100,5,2)
-			ELSE -1
-		END AS HIT_RATIO
-	FROM BPMETRICS AS BP INNER JOIN  TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as I ON I.ID = BP.member WITH UR`
-	
+            bp_name,
+                        pool_data_l_reads + pool_temp_data_l_reads +
+                        pool_index_l_reads + pool_temp_index_l_reads +
+                        pool_xda_l_reads + pool_temp_xda_l_reads as logical_reads,
+                        pool_data_p_reads + pool_temp_data_p_reads +
+                        pool_index_p_reads + pool_temp_index_p_reads +
+                        pool_xda_p_reads + pool_temp_xda_p_reads as physical_reads
+                FROM TABLE(MON_GET_BUFFERPOOL('',-2)) AS METRICS
+        )
+        SELECT RTRIM(BP.member),
+            RTRIM(I.HOME_HOST),
+            (CASE when BDETAIL.DBPGNAME IS NULL then 'ALL'
+        ELSE RTRIM(BDETAIL.DBPGNAME) END) AS DBPGNAME,
+        VARCHAR(BP.bp_name,53) AS bp_name,
+                BP.logical_reads,
+                BP.physical_reads,
+                CASE WHEN BP.logical_reads > 0
+                        THEN DEC((1 - (FLOAT(BP.physical_reads) / FLOAT(BP.logical_reads))) * 100,5,2)
+                        ELSE -1
+                END AS HIT_RATIO
+        FROM BPMETRICS AS BP, TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as I , syscat.bufferpools as BDETAIL
+    WHERE BP.MEMBER = I.ID and BP.bp_name = BDETAIL.BPNAME WITH UR`
 	)
