@@ -359,15 +359,16 @@ func (c *Collector) collectTablespaceStorageMetrics(metrics chan<- prometheus.Me
 		var iMember int
 		var home_host string
 		var tablespace_name string
+		var partition_group string
 		var total, free, used float64
-		if err := rows.Scan(&iMember, &home_host, &tablespace_name, &total, &free, &used); err != nil {
+		if err := rows.Scan(&iMember, &home_host, &partition_group, &tablespace_name, &total, &free, &used); err != nil {
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
         member := strconv.Itoa(iMember)
 
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, total, c.dbName, member, home_host, tablespace_name, "total")
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, free, c.dbName, member, home_host, tablespace_name, "free")
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, used, c.dbName, member, home_host, tablespace_name, "used")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, total, c.dbName, member, home_host,partition_group, tablespace_name, "total")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, free, c.dbName, member, home_host,partition_group, tablespace_name, "free")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, used, c.dbName, member, home_host,partition_group, tablespace_name, "used")
 	}
 
 	return rows.Err()
