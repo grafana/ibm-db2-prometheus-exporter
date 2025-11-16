@@ -48,10 +48,15 @@ const (
 	FROM TABLE(MON_GET_DATABASE(-2)) with ur
 	`
 
-	tablespaceStorageMetricsQuery = `SELECT T.member, I.HOME_HOST , T.tbsp_name, (T.tbsp_total_pages*T.tbsp_page_size) as total_b, (T.tbsp_free_pages*T.tbsp_page_size) as free_b,  (tbsp_used_pages*tbsp_page_size) as used_b FROM TABLE(MON_GET_TABLESPACE('', -2)) as T INNER JOIN  TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as I ON I.ID = T.MEMBER WITH UR`
+	tablespaceStorageMetricsQuery = `SELECT T.member, I.HOME_HOST , (CASE when TSDETAIL.DBPGNAME IS NULL then 'ALL'
+        ELSE RTRIM(TSDETAIL.DBPGNAME) END) AS DBPGNAME,
+        T.tbsp_name, (T.tbsp_total_pages*T.tbsp_page_size) as total_b, (T.tbsp_free_pages*T.tbsp_page_size) as free_b,  
+(tbsp_used_pages*tbsp_page_size) as used_b 
+FROM TABLE(MON_GET_TABLESPACE('', -2)) as T, TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as I, SYSCAT.TABLESPACES as TSDETAIL
+WHERE T.MEMBER = I.ID and T.TBSP_ID = TSDETAIL.TBSPACEID WITH UR`
 
 	logsMetricsQuery = `SELECT T.member, I.HOME_HOST , (T.total_log_available / 4000) as blocks_available, (T.total_log_used / 4000) as blocks_used, T.log_reads, T.log_writes FROM TABLE(MON_GET_TRANSACTION_LOG(-2)) AS T INNER JOIN  TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as I ON I.ID = T.MEMBER WITH UR`
-	
+
 	bufferpoolMetricsQuery = `WITH BPMETRICS AS (SELECT
             member,
             bp_name,

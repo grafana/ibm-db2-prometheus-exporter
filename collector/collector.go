@@ -133,7 +133,7 @@ func NewCollector(logger log.Logger, cfg *Config) *Collector {
 		tablespaceUsage: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "tablespace", "usage"),
 			"The size and usage of table space in bytes.",
-			[]string{labelDatabaseName, labelMember,labelHomeHost,labelTablespaceName, labelTablespaceType},
+			[]string{labelDatabaseName, labelMember,labelHomeHost,labelPartitionGroup,labelTablespaceName, labelTablespaceType},
 			nil,
 		),
 		logUsage: prometheus.NewDesc(
@@ -383,16 +383,17 @@ func (c *Collector) collectLogsMetrics(metrics chan<- prometheus.Metric) error {
 	for rows.Next() {
 		var iMember int
 		var home_host string
+		var partition_group string
 		var available, used, reads, writes float64
-		if err := rows.Scan(&iMember, &home_host, &available, &used, &reads, &writes); err != nil {
+		if err := rows.Scan(&iMember, &home_host, &partition_group, &available, &used, &reads, &writes); err != nil {
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
 		member := strconv.Itoa(iMember)
 
-		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, available, c.dbName, member, home_host, "available")
-		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, used, c.dbName, member, home_host, "used")
-		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, reads, c.dbName, member, home_host, "read")
-		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, writes, c.dbName, member, home_host, "write")
+		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, available, c.dbName, member, home_host,partition_group, "available")
+		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, used, c.dbName, member, home_host, partition_group, "used")
+		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, reads, c.dbName, member, home_host,partition_group, "read")
+		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, writes, c.dbName, member, home_host,partition_group, "write")
 	}
 
 	return rows.Err()
