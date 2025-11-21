@@ -17,19 +17,18 @@
 package collector
 
 const (
-
-	databaseNoPartitionsMetricsQuery = `SELECT ID, HOME_HOST, DB_PARTITION_NUM FROM TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as T WITH UR`
+	
 
 	databaseTableMetricsQuery = `SELECT
 	SUM(connections_top) as connections_top,
 	SUM(deadlocks) as deadlock_count
-	FROM TABLE(MON_GET_DATABASE(-2)) with ur
+	FROM TABLE(MON_GET_DATABASE(-2)) WITH UR
 	`
 
 	applicationMetricsQuery = `SELECT
 	SUM(appls_cur_cons) as application_active,
 	SUM(appls_in_db2) as application_executing
-	FROM TABLE(MON_GET_DATABASE(-2)) with ur
+	FROM TABLE(MON_GET_DATABASE(-2)) WITH UR
 	`
 
 	lockMetricsQuery = `SELECT
@@ -37,7 +36,7 @@ const (
 	SUM(num_locks_held) as lock_active,
 	SUM(lock_wait_time) as lock_wait_time,
 	SUM(lock_timeouts) as lock_timeout_count
-	FROM TABLE(MON_GET_DATABASE(-2)) with ur
+	FROM TABLE(MON_GET_DATABASE(-2)) WITH UR
 	`
 
 	rowMetricsQuery = `SELECT
@@ -45,13 +44,13 @@ const (
 	SUM(rows_inserted) as rows_inserted,
 	SUM(rows_updated) as rows_updated,
 	SUM(rows_read) as rows_read
-	FROM TABLE(MON_GET_DATABASE(-2)) with ur
+	FROM TABLE(MON_GET_DATABASE(-2)) WITH UR
 	`
 
 	tablespaceStorageMetricsQuery = `SELECT T.member, I.HOME_HOST , (CASE when TSDETAIL.DBPGNAME IS NULL then 'ALL'
         ELSE RTRIM(TSDETAIL.DBPGNAME) END) AS DBPGNAME,
         T.tbsp_name, (T.tbsp_total_pages*T.tbsp_page_size) as total_b, (T.tbsp_free_pages*T.tbsp_page_size) as free_b,  
-(tbsp_used_pages*tbsp_page_size) as used_b 
+(T.tbsp_used_pages*T.tbsp_page_size) as used_b 
 FROM TABLE(MON_GET_TABLESPACE('', -2)) as T, TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as I, SYSCAT.TABLESPACES as TSDETAIL
 WHERE T.MEMBER = I.ID and T.TBSP_ID = TSDETAIL.TBSPACEID WITH UR`
 
@@ -81,4 +80,4 @@ WHERE T.MEMBER = I.ID and T.TBSP_ID = TSDETAIL.TBSPACEID WITH UR`
                 END AS HIT_RATIO
         FROM BPMETRICS AS BP, TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as I , syscat.bufferpools as BDETAIL
     WHERE BP.MEMBER = I.ID and BP.bp_name = BDETAIL.BPNAME WITH UR`
-	)
+)
