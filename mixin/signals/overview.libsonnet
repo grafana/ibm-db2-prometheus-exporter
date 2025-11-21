@@ -2,13 +2,18 @@ function(this) {
   filteringSelector: this.filteringSelector,
   groupLabels: this.groupLabels,
   instanceLabels: this.instanceLabels,
-  aggLevel: 'instance',
+  enableLokiLogs: this.enableLokiLogs,
+  aggLevel: 'none',
   aggFunction: 'avg',
+  alertsInterval: '5m',
+  discoveryMetric: {
+    prometheus: 'ibm_db2_application_active',
+  },
   signals: {
     // Up status signal
     upStatus: {
       name: 'Up status',
-      type: 'raw',
+      type: 'gauge',
       description: 'Whether the IBM DB2 exporter is up.',
       unit: 'short',
       sources: {
@@ -37,13 +42,13 @@ function(this) {
     rowOperations: {
       name: 'Row operations',
       type: 'counter',
-      rangeFunction: 'increase',
       description: 'The number of row operations that are being performed on the database.',
       unit: 'short',
       sources: {
         prometheus: {
           expr: 'ibm_db2_row_total{%(queriesSelector)s}',
           legendCustomTemplate: '{{database_name}} - {{row_state}}',
+          rangeFunction: 'increase',
         },
       },
     },
@@ -94,13 +99,13 @@ function(this) {
     deadlocks: {
       name: 'Deadlocks',
       type: 'counter',
-      rangeFunction: 'increase',
       description: 'The number of deadlocks occurring on the database.',
       unit: 'short',
       sources: {
         prometheus: {
           expr: 'ibm_db2_deadlock_total{%(queriesSelector)s}',
           legendCustomTemplate: '{{database_name}}',
+          rangeFunction: 'increase',
         },
       },
     },
@@ -137,13 +142,13 @@ function(this) {
     logOperations: {
       name: 'Log operations',
       type: 'counter',
-      rangeFunction: 'increase',
       description: 'The number of log pages read and written to by the logger.',
       unit: 'short',
       sources: {
         prometheus: {
           expr: 'ibm_db2_log_operations_total{%(queriesSelector)s}',
           legendCustomTemplate: '{{database_name}} - {{log_member}} - {{log_operation_type}}',
+          rangeFunction: 'increase',
         },
       },
     },

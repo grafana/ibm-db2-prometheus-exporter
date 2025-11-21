@@ -39,17 +39,9 @@ local g = import './g.libsonnet';
     // Logs row - contains diagnostic logs (if Loki is enabled), log storage usage, and log operations
     logsRow:
       g.panel.row.new('Logs')
-      + g.panel.row.withPanels(
-        (
-          if this.config.enableLokiLogs then [
-            panels.diagnosticLogs { gridPos: { h: 6, w: 24, x: 0, y: 5 } },
-            panels.logStorageUsage { gridPos: { h: 6, w: 6, x: 0, y: 6 } },
-            panels.logOperations { gridPos: { h: 6, w: 18, x: 6, y: 6 } },
-          ] else [
-            panels.logStorageUsage { gridPos: { h: 6, w: 6, x: 0, y: 5 } },
-            panels.logOperations { gridPos: { h: 6, w: 18, x: 6, y: 5 } },
-          ]
-        )
-      ),
+      + g.panel.row.withPanels([
+        panels.logStorageUsage { gridPos: { h: 6, w: 6, x: 0, y: 5 } },
+        panels.logOperations { gridPos: { h: 6, w: 18, x: 6, y: 5 } },
+      ]),
   },
 }

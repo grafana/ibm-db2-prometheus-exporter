@@ -15,11 +15,31 @@
       "source": {
         "git": {
           "remote": "https://github.com/grafana/grafonnet.git",
+          "subdir": "gen/grafonnet-latest"
+        }
+      },
+      "version": "8a27651b56fbdba45a389ccb11440200091c73a1",
+      "sum": "V9vAj21qJOc2DlMPDgB1eEjSQU4A+sAA4AXuJ6bd4xc="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/grafonnet.git",
           "subdir": "gen/grafonnet-v11.0.0"
         }
       },
       "version": "42d098fae987f25f08480e203ca6ddc548c6efbf",
       "sum": "0BvzR0i4bS4hc2O3xDv6i9m52z7mPrjvqxtcPrGhynA="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/grafonnet.git",
+          "subdir": "gen/grafonnet-v11.4.0"
+        }
+      },
+      "version": "8a27651b56fbdba45a389ccb11440200091c73a1",
+      "sum": "aVAX09paQYNOoCSKVpuk1exVIyBoMt/C50QJI+Q/3nA="
     },
     {
       "source": {
@@ -30,6 +50,16 @@
       },
       "version": "54a1543d797d49814d2f9c05b9c222b9f1e4f6e7",
       "sum": "XnpzeZC2Pa1aEtDOqy+KTndcUTnwFMlj6XlZmv3XBj0="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/jsonnet-libs.git",
+          "subdir": "grafana-cloud-integration-utils"
+        }
+      },
+      "version": "d1eede9462c03d44dcd4a707aa8e7dcaf155a552",
+      "sum": "f4RYXgxayzDyeBjedbcUWaxIk3WN+y+wsEwcn+cWnJw="
     },
     {
       "source": {
