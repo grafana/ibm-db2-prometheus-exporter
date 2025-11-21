@@ -2,13 +2,13 @@
   local this = self,
   filteringSelector: 'job="integrations/ibm-db2"',
   groupLabels: ['job', 'cluster'],
-  logLabels: [],
-  instanceLabels: ['instance'],
+  logLabels: ['job', 'cluster', 'instance'],
+  instanceLabels: ['instance', 'database_name'],
 
   uid: 'ibm-db2',
-  dashboardTags: [self.uid + '-mixin'],
+  dashboardTags: [self.uid],
   dashboardNamePrefix: 'IBM DB2',
-  dashboardPeriod: 'now-3h',
+  dashboardPeriod: 'now-1h',
   dashboardTimezone: 'default',
   dashboardRefresh: '1m',
   metricsSource: ['prometheus'],  // metrics source for signals
@@ -16,7 +16,7 @@
 
   // Logging configuration
   enableLokiLogs: true,
-  extraLogLabels: ['level'],  // Required by logs-lib
+  extraLogLabels: ['level', 'severity'],  // Required by logs-lib
   logsVolumeGroupBy: 'level',
   showLogsVolume: true,
 

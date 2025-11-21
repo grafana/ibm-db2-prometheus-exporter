@@ -1,6 +1,8 @@
 local alerts = import './alerts.libsonnet';
 local config = import './config.libsonnet';
 local dashboards = import './dashboards.libsonnet';
+local g = import './g.libsonnet';
+local links = import './links.libsonnet';
 local panels = import './panels.libsonnet';
 local rows = import './rows.libsonnet';
 local commonlib = import 'common-lib/common/main.libsonnet';
@@ -13,6 +15,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
   new(): {
     local this = self,
     config: config,
+
     signals:
       {
         [sig]: commonlib.signals.unmarshallJsonMulti(
@@ -28,12 +31,12 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         filteringSelector=this.config.filteringSelector,
         groupLabels=this.config.groupLabels,
         instanceLabels=this.config.instanceLabels,
-        varMetric='ibm_db2_up',
+        varMetric='ibm_db2_application_active',
         customAllValue='.+',
         enableLokiLogs=this.config.enableLokiLogs,
       ),
       annotations: {},
-      links: {},
+      links: links.new(this),
       panels: panels.new(this),
       dashboards: dashboards.new(this),
       rows: rows.new(this),
