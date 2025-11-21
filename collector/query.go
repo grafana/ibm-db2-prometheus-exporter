@@ -78,6 +78,6 @@ WHERE T.MEMBER = I.ID and T.TBSP_ID = TSDETAIL.TBSPACEID WITH UR`
                         THEN DEC((1 - (FLOAT(BP.physical_reads) / FLOAT(BP.logical_reads))) * 100,5,2)
                         ELSE -1
                 END AS HIT_RATIO
-        FROM BPMETRICS AS BP, TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as I , syscat.bufferpools as BDETAIL
+        FROM BPMETRICS AS BP, TABLE(DB2_GET_INSTANCE_INFO(null,'','','',null)) as I , SYSCAT.BUFFERPOOLS as BDETAIL
     WHERE BP.MEMBER = I.ID and BP.bp_name = BDETAIL.BPNAME WITH UR`
 )
