@@ -25,7 +25,8 @@ The ibm-db2-exporter has been tested on Single Partition Db2,  limited testing o
 Additionally, The least Db2 privileges required to run 
 ibm-db2-exporter our - 
 
-grant connect on database to user prometheus;
+db2 grant connect on database to user prometheus;
+
 db2 grant execute on function SYSPROC.MON_GET_TRANSACTION_LOG to user prometheus;
 db2 grant execute on function SYSPROC.MON_GET_TABLESPACE to user prometheus;
 db2 grant execute on function SYSPROC.MON_GET_DATABASE to user prometheus;
