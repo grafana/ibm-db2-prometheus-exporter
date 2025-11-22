@@ -31,6 +31,8 @@ db2 grant execute on function SYSPROC.MON_GET_TRANSACTION_LOG to user prometheus
 
 db2 grant execute on function SYSPROC.MON_GET_TABLESPACE to user prometheus;
 
+db2 grant execute on function SYSPROC.MON_GET_BUFFERPOOL to user prometheus;
+
 db2 grant execute on function SYSPROC.MON_GET_DATABASE to user prometheus;
 
 db2 grant execute on function SYSIBMADM.DB2_GET_INSTANCE_INFO to user prometheus;
