@@ -28,11 +28,17 @@ ibm-db2-exporter our -
 db2 grant connect on database to user prometheus;
 
 db2 grant execute on function SYSPROC.MON_GET_TRANSACTION_LOG to user prometheus;
+
 db2 grant execute on function SYSPROC.MON_GET_TABLESPACE to user prometheus;
+
 db2 grant execute on function SYSPROC.MON_GET_DATABASE to user prometheus;
+
 db2 grant execute on function SYSIBMADM.DB2_GET_INSTANCE_INFO to user prometheus;
+
 db2 grant select on table SYSCAT.TABLESPACES to user prometheus;
+
 db2 grant select on table SYSCAT.BUFFERPOOLS to user prometheus;
+
 
 
 ## Driver installation (optional)
