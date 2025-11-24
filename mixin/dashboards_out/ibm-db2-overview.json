@@ -1,25 +1,41 @@
 {
-      "__inputs": [ ],
-      "__requires": [ ],
       "annotations": {
          "list": [ ]
       },
-      "description": "",
       "editable": false,
-      "gnetId": null,
-      "graphTooltip": 0,
-      "hideControls": false,
       "id": null,
-      "links": [ ],
+      "links": [
+         {
+            "keepTime": true,
+            "title": "IBM DB2 logs",
+            "type": "link",
+            "url": "/d/ibmdb2-logs"
+         }
+      ],
       "panels": [
          {
+            "collapsed": false,
+            "gridPos": {
+               "h": 1,
+               "w": 0,
+               "x": 0,
+               "y": 0
+            },
+            "id": 1,
+            "panels": [ ],
+            "title": "Overview",
+            "type": "row"
+         },
+         {
             "datasource": {
+               "type": "prometheus",
                "uid": "${prometheus_datasource}"
             },
             "description": "Whether the agent integration is up for this database.",
             "fieldConfig": {
                "defaults": {
                   "color": {
+                     "fixedColor": "text",
                      "mode": "thresholds"
                   },
                   "mappings": [
@@ -38,50 +54,38 @@
                         },
                         "type": "value"
                      }
-                  ],
-                  "thresholds": {
-                     "mode": "absolute",
-                     "steps": [
-                        {
-                           "color": "green",
-                           "value": null
-                        }
-                     ]
-                  }
-               },
-               "overrides": [ ]
+                  ]
+               }
             },
             "gridPos": {
                "h": 6,
                "w": 6,
                "x": 0,
-               "y": 0
+               "y": 1
             },
             "id": 2,
             "options": {
                "colorMode": "value",
                "graphMode": "none",
-               "justifyMode": "auto",
-               "orientation": "auto",
                "reduceOptions": {
                   "calcs": [
                      "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-               },
-               "textMode": "auto"
+                  ]
+               }
             },
-            "pluginVersion": "10.0.1-cloud.2.a7a20fbf",
+            "pluginVersion": "v11.0.0",
             "targets": [
                {
                   "datasource": {
+                     "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "ibm_db2_up{job=~\"$job\", instance=~\"$instance\", database_name=~\"$database_name\"}",
+                  "expr": "ibm_db2_up{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}",
                   "format": "time_series",
+                  "instant": false,
                   "intervalFactor": 2,
-                  "legendFormat": "{{instance}}"
+                  "legendFormat": "{{instance}}",
+                  "refId": "Up status"
                }
             ],
             "title": "Up status",
@@ -89,174 +93,119 @@
          },
          {
             "datasource": {
+               "type": "prometheus",
                "uid": "${prometheus_datasource}"
             },
             "description": "The amount of active connections to the database.",
             "fieldConfig": {
                "defaults": {
-                  "color": {
-                     "mode": "palette-classic"
-                  },
                   "custom": {
-                     "axisCenteredZero": false,
-                     "axisColorMode": "text",
-                     "axisLabel": "",
-                     "axisPlacement": "auto",
-                     "barAlignment": 0,
-                     "drawStyle": "line",
-                     "fillOpacity": 0,
-                     "gradientMode": "none",
-                     "hideFrom": {
-                        "legend": false,
-                        "tooltip": false,
-                        "viz": false
-                     },
-                     "lineInterpolation": "linear",
-                     "lineWidth": 1,
-                     "pointSize": 5,
-                     "scaleDistribution": {
-                        "type": "linear"
-                     },
-                     "showPoints": "auto",
-                     "spanNulls": false,
-                     "stacking": {
-                        "group": "A",
-                        "mode": "none"
-                     },
-                     "thresholdsStyle": {
-                        "mode": "off"
-                     }
-                  },
-                  "mappings": [ ],
-                  "thresholds": {
-                     "mode": "absolute",
-                     "steps": [
-                        {
-                           "color": "green",
-                           "value": null
-                        }
-                     ]
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
                   },
                   "unit": "none"
-               },
-               "overrides": [ ]
+               }
             },
             "gridPos": {
                "h": 6,
                "w": 18,
                "x": 6,
-               "y": 0
+               "y": 1
             },
             "id": 3,
             "options": {
                "legend": {
                   "calcs": [ ],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
+                  "displayMode": "list"
                },
                "tooltip": {
                   "mode": "multi",
                   "sort": "desc"
                }
             },
+            "pluginVersion": "v11.0.0",
             "targets": [
                {
                   "datasource": {
+                     "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "ibm_db2_application_active{job=~\"$job\", instance=~\"$instance\", database_name=~\"$database_name\"}",
+                  "expr": "ibm_db2_application_active{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}",
                   "format": "time_series",
+                  "instant": false,
                   "intervalFactor": 2,
-                  "legendFormat": "{{database_name}}"
+                  "legendFormat": "{{database_name}}",
+                  "refId": "Active connections"
                }
             ],
             "title": "Active connections",
             "type": "timeseries"
          },
          {
+            "collapsed": false,
+            "gridPos": {
+               "h": 1,
+               "w": 0,
+               "x": 0,
+               "y": 7
+            },
+            "id": 4,
+            "panels": [ ],
+            "title": "Operations",
+            "type": "row"
+         },
+         {
             "datasource": {
+               "type": "prometheus",
                "uid": "${prometheus_datasource}"
             },
             "description": "The number of row operations that are being performed on the database.",
             "fieldConfig": {
                "defaults": {
-                  "color": {
-                     "mode": "palette-classic"
-                  },
                   "custom": {
-                     "axisCenteredZero": false,
-                     "axisColorMode": "text",
-                     "axisLabel": "",
-                     "axisPlacement": "auto",
-                     "barAlignment": 0,
-                     "drawStyle": "line",
-                     "fillOpacity": 0,
-                     "gradientMode": "none",
-                     "hideFrom": {
-                        "legend": false,
-                        "tooltip": false,
-                        "viz": false
-                     },
-                     "lineInterpolation": "linear",
-                     "lineWidth": 1,
-                     "pointSize": 5,
-                     "scaleDistribution": {
-                        "type": "linear"
-                     },
-                     "showPoints": "auto",
-                     "spanNulls": false,
-                     "stacking": {
-                        "group": "A",
-                        "mode": "none"
-                     },
-                     "thresholdsStyle": {
-                        "mode": "off"
-                     }
-                  },
-                  "mappings": [ ],
-                  "thresholds": {
-                     "mode": "absolute",
-                     "steps": [
-                        {
-                           "color": "green",
-                           "value": null
-                        }
-                     ]
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
                   },
                   "unit": "none"
-               },
-               "overrides": [ ]
+               }
             },
             "gridPos": {
                "h": 6,
                "w": 12,
                "x": 0,
-               "y": 6
+               "y": 8
             },
-            "id": 4,
+            "id": 5,
             "options": {
                "legend": {
                   "calcs": [ ],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
+                  "displayMode": "list"
                },
                "tooltip": {
                   "mode": "multi",
                   "sort": "desc"
                }
             },
+            "pluginVersion": "v11.0.0",
             "targets": [
                {
                   "datasource": {
+                     "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "increase(ibm_db2_row_total{job=~\"$job\", instance=~\"$instance\", database_name=~\"$database_name\"}[$__interval:])",
+                  "expr": "increase(ibm_db2_row_total{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}[$__interval:] offset -$__interval)",
                   "format": "time_series",
+                  "instant": false,
                   "interval": "1m",
                   "intervalFactor": 2,
-                  "legendFormat": "{{database_name}} - {{row_state}}"
+                  "legendFormat": "{{database_name}} - {{row_state}}",
+                  "refId": "Row operations"
                }
             ],
             "title": "Row operations",
@@ -264,134 +213,86 @@
          },
          {
             "datasource": {
+               "type": "prometheus",
                "uid": "${prometheus_datasource}"
             },
             "description": "The percentage of time that the database manager did not need to load a page from disk to service a page request.",
             "fieldConfig": {
                "defaults": {
-                  "color": {
-                     "mode": "palette-classic"
-                  },
                   "custom": {
-                     "axisCenteredZero": false,
-                     "axisColorMode": "text",
-                     "axisLabel": "",
-                     "axisPlacement": "auto",
-                     "barAlignment": 0,
-                     "drawStyle": "line",
-                     "fillOpacity": 0,
-                     "gradientMode": "none",
-                     "hideFrom": {
-                        "legend": false,
-                        "tooltip": false,
-                        "viz": false
-                     },
-                     "lineInterpolation": "linear",
-                     "lineWidth": 1,
-                     "pointSize": 5,
-                     "scaleDistribution": {
-                        "type": "linear"
-                     },
-                     "showPoints": "auto",
-                     "spanNulls": false,
-                     "stacking": {
-                        "group": "A",
-                        "mode": "none"
-                     },
-                     "thresholdsStyle": {
-                        "mode": "off"
-                     }
-                  },
-                  "mappings": [ ],
-                  "thresholds": {
-                     "mode": "absolute",
-                     "steps": [
-                        {
-                           "color": "green",
-                           "value": null
-                        }
-                     ]
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
                   },
                   "unit": "percent"
-               },
-               "overrides": [ ]
+               }
             },
             "gridPos": {
                "h": 6,
                "w": 12,
                "x": 12,
-               "y": 6
+               "y": 8
             },
-            "id": 5,
+            "id": 6,
             "options": {
                "legend": {
                   "calcs": [ ],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
+                  "displayMode": "list"
                },
                "tooltip": {
                   "mode": "multi",
                   "sort": "desc"
                }
             },
+            "pluginVersion": "v11.0.0",
             "targets": [
                {
                   "datasource": {
+                     "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "ibm_db2_bufferpool_hit_ratio{job=~\"$job\", instance=~\"$instance\", database_name=~\"$database_name\"}",
+                  "expr": "ibm_db2_bufferpool_hit_ratio{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}",
                   "format": "time_series",
+                  "instant": false,
                   "intervalFactor": 2,
-                  "legendFormat": "{{database_name}} - {{bufferpool_name}}"
+                  "legendFormat": "{{database_name}} - {{bufferpool_name}}",
+                  "refId": "Bufferpool hit ratio"
                }
             ],
             "title": "Bufferpool hit ratio",
             "type": "timeseries"
          },
          {
+            "collapsed": false,
+            "gridPos": {
+               "h": 1,
+               "w": 0,
+               "x": 0,
+               "y": 14
+            },
+            "id": 7,
+            "panels": [ ],
+            "title": "Tablespace",
+            "type": "row"
+         },
+         {
             "datasource": {
+               "type": "prometheus",
                "uid": "${prometheus_datasource}"
             },
             "description": "The size and usage of table spaces.",
             "fieldConfig": {
                "defaults": {
-                  "color": {
-                     "mode": "palette-classic"
-                  },
                   "custom": {
-                     "axisCenteredZero": false,
-                     "axisColorMode": "text",
-                     "axisLabel": "",
-                     "axisPlacement": "auto",
-                     "barAlignment": 0,
-                     "drawStyle": "line",
-                     "fillOpacity": 0,
-                     "gradientMode": "none",
-                     "hideFrom": {
-                        "legend": false,
-                        "tooltip": false,
-                        "viz": false
-                     },
-                     "lineInterpolation": "linear",
-                     "lineWidth": 1,
-                     "pointSize": 5,
-                     "scaleDistribution": {
-                        "type": "linear"
-                     },
-                     "showPoints": "auto",
-                     "spanNulls": false,
-                     "stacking": {
-                        "group": "A",
-                        "mode": "none"
-                     },
-                     "thresholdsStyle": {
-                        "mode": "off"
-                     }
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
                   },
-                  "mappings": [ ],
                   "thresholds": {
-                     "mode": "absolute",
                      "steps": [
                         {
                            "color": "green",
@@ -404,85 +305,72 @@
                      ]
                   },
                   "unit": "decbytes"
-               },
-               "overrides": [ ]
+               }
             },
             "gridPos": {
                "h": 6,
                "w": 24,
                "x": 0,
-               "y": 12
+               "y": 15
             },
-            "id": 6,
+            "id": 8,
             "options": {
                "legend": {
                   "calcs": [ ],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
+                  "displayMode": "list"
                },
                "tooltip": {
                   "mode": "multi",
                   "sort": "desc"
                }
             },
+            "pluginVersion": "v11.0.0",
             "targets": [
                {
                   "datasource": {
+                     "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "ibm_db2_tablespace_usage{job=~\"$job\", instance=~\"$instance\", database_name=~\"$database_name\", tablespace_type=\"used\"}",
+                  "expr": "ibm_db2_tablespace_usage{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\", tablespace_type=\"used\"}",
                   "format": "time_series",
+                  "instant": false,
                   "intervalFactor": 2,
-                  "legendFormat": "{{database_name}} - {{tablespace_name}}"
+                  "legendFormat": "{{database_name}} - {{tablespace_name}}",
+                  "refId": "Tablespace usage"
                }
             ],
             "title": "Tablespace usage",
             "type": "timeseries"
          },
          {
+            "collapsed": false,
+            "gridPos": {
+               "h": 1,
+               "w": 0,
+               "x": 0,
+               "y": 21
+            },
+            "id": 9,
+            "panels": [ ],
+            "title": "Locks",
+            "type": "row"
+         },
+         {
             "datasource": {
+               "type": "prometheus",
                "uid": "${prometheus_datasource}"
             },
             "description": "The average wait time for a database while acquiring locks.",
             "fieldConfig": {
                "defaults": {
-                  "color": {
-                     "mode": "palette-classic"
-                  },
                   "custom": {
-                     "axisCenteredZero": false,
-                     "axisColorMode": "text",
-                     "axisLabel": "",
-                     "axisPlacement": "auto",
-                     "barAlignment": 0,
-                     "drawStyle": "line",
-                     "fillOpacity": 0,
-                     "gradientMode": "none",
-                     "hideFrom": {
-                        "legend": false,
-                        "tooltip": false,
-                        "viz": false
-                     },
-                     "lineInterpolation": "linear",
-                     "lineWidth": 1,
-                     "pointSize": 5,
-                     "scaleDistribution": {
-                        "type": "linear"
-                     },
-                     "showPoints": "auto",
-                     "spanNulls": false,
-                     "stacking": {
-                        "group": "A",
-                        "mode": "none"
-                     },
-                     "thresholdsStyle": {
-                        "mode": "off"
-                     }
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
                   },
-                  "mappings": [ ],
                   "thresholds": {
-                     "mode": "absolute",
                      "steps": [
                         {
                            "color": "green",
@@ -495,37 +383,38 @@
                      ]
                   },
                   "unit": "ms"
-               },
-               "overrides": [ ]
+               }
             },
             "gridPos": {
                "h": 6,
                "w": 8,
                "x": 0,
-               "y": 18
+               "y": 22
             },
-            "id": 7,
+            "id": 10,
             "options": {
                "legend": {
                   "calcs": [ ],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
+                  "displayMode": "list"
                },
                "tooltip": {
                   "mode": "multi",
                   "sort": "desc"
                }
             },
+            "pluginVersion": "v11.0.0",
             "targets": [
                {
                   "datasource": {
+                     "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "ibm_db2_lock_wait_time{job=~\"$job\", instance=~\"$instance\", database_name=~\"$database_name\"}",
+                  "expr": "ibm_db2_lock_wait_time{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}",
                   "format": "time_series",
+                  "instant": false,
                   "intervalFactor": 2,
-                  "legendFormat": "{{database_name}}"
+                  "legendFormat": "{{database_name}}",
+                  "refId": "Average lock wait time"
                }
             ],
             "title": "Average lock wait time",
@@ -533,47 +422,20 @@
          },
          {
             "datasource": {
+               "type": "prometheus",
                "uid": "${prometheus_datasource}"
             },
             "description": "The number of deadlocks occurring on the database.",
             "fieldConfig": {
                "defaults": {
-                  "color": {
-                     "mode": "palette-classic"
-                  },
                   "custom": {
-                     "axisCenteredZero": false,
-                     "axisColorMode": "text",
-                     "axisLabel": "",
-                     "axisPlacement": "auto",
-                     "barAlignment": 0,
-                     "drawStyle": "line",
-                     "fillOpacity": 0,
-                     "gradientMode": "none",
-                     "hideFrom": {
-                        "legend": false,
-                        "tooltip": false,
-                        "viz": false
-                     },
-                     "lineInterpolation": "linear",
-                     "lineWidth": 1,
-                     "pointSize": 5,
-                     "scaleDistribution": {
-                        "type": "linear"
-                     },
-                     "showPoints": "auto",
-                     "spanNulls": false,
-                     "stacking": {
-                        "group": "A",
-                        "mode": "none"
-                     },
-                     "thresholdsStyle": {
-                        "mode": "off"
-                     }
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
                   },
-                  "mappings": [ ],
                   "thresholds": {
-                     "mode": "absolute",
                      "steps": [
                         {
                            "color": "green",
@@ -586,38 +448,39 @@
                      ]
                   },
                   "unit": "none"
-               },
-               "overrides": [ ]
+               }
             },
             "gridPos": {
                "h": 6,
                "w": 8,
                "x": 8,
-               "y": 18
+               "y": 22
             },
-            "id": 8,
+            "id": 11,
             "options": {
                "legend": {
                   "calcs": [ ],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
+                  "displayMode": "list"
                },
                "tooltip": {
                   "mode": "multi",
                   "sort": "desc"
                }
             },
+            "pluginVersion": "v11.0.0",
             "targets": [
                {
                   "datasource": {
+                     "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "increase(ibm_db2_deadlock_total{job=~\"$job\", instance=~\"$instance\", database_name=~\"$database_name\"}[$__interval:])",
+                  "expr": "increase(ibm_db2_deadlock_total{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}[$__interval:] offset -$__interval)",
                   "format": "time_series",
+                  "instant": false,
                   "interval": "1m",
                   "intervalFactor": 2,
-                  "legendFormat": "{{database_name}}"
+                  "legendFormat": "{{database_name}}",
+                  "refId": "Deadlocks"
                }
             ],
             "title": "Deadlocks",
@@ -625,87 +488,66 @@
          },
          {
             "datasource": {
+               "type": "prometheus",
                "uid": "${prometheus_datasource}"
             },
             "description": "The number of locks active and waiting in use in the database.",
             "fieldConfig": {
                "defaults": {
-                  "color": {
-                     "mode": "palette-classic"
-                  },
                   "custom": {
-                     "axisCenteredZero": false,
-                     "axisColorMode": "text",
-                     "axisLabel": "",
-                     "axisPlacement": "auto",
-                     "axisSoftMax": -4,
-                     "barAlignment": 0,
-                     "drawStyle": "line",
-                     "fillOpacity": 0,
-                     "gradientMode": "none",
-                     "hideFrom": {
-                        "legend": false,
-                        "tooltip": false,
-                        "viz": false
-                     },
-                     "lineInterpolation": "linear",
-                     "lineWidth": 1,
-                     "pointSize": 5,
-                     "scaleDistribution": {
-                        "type": "linear"
-                     },
-                     "showPoints": "auto",
-                     "spanNulls": false,
-                     "stacking": {
-                        "group": "A",
-                        "mode": "none"
-                     },
-                     "thresholdsStyle": {
-                        "mode": "off"
-                     }
-                  },
-                  "mappings": [ ],
-                  "thresholds": {
-                     "mode": "absolute",
-                     "steps": [
-                        {
-                           "color": "green",
-                           "value": null
-                        }
-                     ]
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
                   },
                   "unit": "none"
                },
-               "overrides": [ ]
+               "overrides": [
+                  {
+                     "matcher": {
+                        "id": "byRegexp",
+                        "options": "/./"
+                     },
+                     "properties": [
+                        {
+                           "id": "custom.axisSoftMax",
+                           "value": -4
+                        }
+                     ]
+                  }
+               ]
             },
             "gridPos": {
                "h": 6,
                "w": 8,
                "x": 16,
-               "y": 18
+               "y": 22
             },
-            "id": 9,
+            "id": 12,
             "options": {
                "legend": {
                   "calcs": [ ],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
+                  "displayMode": "list"
                },
                "tooltip": {
                   "mode": "multi",
                   "sort": "desc"
                }
             },
+            "pluginVersion": "v11.0.0",
             "targets": [
                {
                   "datasource": {
+                     "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "ibm_db2_lock_usage{job=~\"$job\", instance=~\"$instance\", database_name=~\"$database_name\"}",
+                  "expr": "ibm_db2_lock_usage{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}",
                   "format": "time_series",
+                  "instant": false,
                   "intervalFactor": 2,
-                  "legendFormat": "{{database_name}} - {{lock_state}}"
+                  "legendFormat": "{{database_name}} - {{lock_state}}",
+                  "refId": "Lock usage"
                }
             ],
             "title": "Locks",
@@ -713,111 +555,61 @@
          },
          {
             "collapsed": false,
-            "datasource": {
-               "uid": "${prometheus_datasource}"
-            },
             "gridPos": {
                "h": 1,
-               "w": 24,
+               "w": 0,
                "x": 0,
-               "y": 24
+               "y": 28
             },
-            "id": 10,
-            "targets": [ ],
+            "id": 13,
+            "panels": [ ],
             "title": "Logs",
             "type": "row"
          },
          {
             "datasource": {
-               "uid": "${loki_datasource}"
-            },
-            "description": "Recent logs from diagnostic log file.",
-            "gridPos": {
-               "h": 6,
-               "w": 24,
-               "x": 0,
-               "y": 25
-            },
-            "id": 11,
-            "options": {
-               "dedupStrategy": "none",
-               "enableLogDetails": true,
-               "prettifyLogMessage": false,
-               "showCommonLabels": false,
-               "showLabels": false,
-               "showTime": false,
-               "sortOrder": "Descending",
-               "wrapLogMessage": false
-            },
-            "targets": [
-               {
-                  "datasource": {
-                     "uid": "${loki_datasource}"
-                  },
-                  "editorMode": "code",
-                  "expr": "{job=~\"$job\", instance=~\"$instance\", database_name=~\"$database_name\"} |= `` | (filename=~\"/home/.*/sqllib/db2dump/DIAG.*/db2diag.log|/home/.*/sqllib/db2dump/db2diag.log\" or log_type=\"db2diag\")",
-                  "queryType": "range",
-                  "refId": "A"
-               }
-            ],
-            "title": "Diagnostic logs",
-            "type": "logs"
-         },
-         {
-            "datasource": {
+               "type": "prometheus",
                "uid": "${prometheus_datasource}"
             },
             "description": "The percentage of allocated storage being used by the IBM DB2 instance.",
             "fieldConfig": {
                "defaults": {
                   "color": {
+                     "fixedColor": "text",
                      "mode": "thresholds"
                   },
-                  "mappings": [ ],
-                  "thresholds": {
-                     "mode": "absolute",
-                     "steps": [
-                        {
-                           "color": "green",
-                           "value": null
-                        }
-                     ]
-                  },
                   "unit": "percent"
-               },
-               "overrides": [ ]
+               }
             },
             "gridPos": {
                "h": 6,
                "w": 6,
                "x": 0,
-               "y": 31
+               "y": 29
             },
-            "id": 12,
+            "id": 14,
             "options": {
                "colorMode": "value",
                "graphMode": "none",
-               "justifyMode": "auto",
-               "orientation": "auto",
                "reduceOptions": {
                   "calcs": [
                      "lastNotNull"
-                  ],
-                  "fields": "",
-                  "values": false
-               },
-               "textMode": "auto"
+                  ]
+               }
             },
-            "pluginVersion": "10.0.1-cloud.2.a7a20fbf",
+            "pluginVersion": "v11.0.0",
             "targets": [
                {
                   "datasource": {
+                     "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "100 * sum(ibm_db2_log_usage{job=~\"$job\", instance=~\"$instance\", database_name=~\"$database_name\", log_usage_type=\"used\"}) by (instance, job, database_name) / sum(ibm_db2_log_usage{job=~\"$job\", instance=~\"$instance\", database_name=~\"$database_name\", log_usage_type=\"available\"}) by (instance, job, database_name)",
+                  "expr": "100 * sum(ibm_db2_log_usage{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\", log_usage_type=\"used\"}) by (instance, job, database_name) / sum(ibm_db2_log_usage{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\", log_usage_type=\"available\"}) by (instance, job, database_name)",
                   "format": "time_series",
+                  "instant": false,
                   "intervalFactor": 2,
-                  "legendFormat": "{{instance}}"
+                  "legendFormat": "{{instance}}",
+                  "refId": "Log storage usage"
                }
             ],
             "title": "Log storage usage",
@@ -825,245 +617,159 @@
          },
          {
             "datasource": {
+               "type": "prometheus",
                "uid": "${prometheus_datasource}"
             },
             "description": "The number of log pages read and written to by the logger.",
             "fieldConfig": {
                "defaults": {
-                  "color": {
-                     "mode": "palette-classic"
-                  },
                   "custom": {
-                     "axisCenteredZero": false,
-                     "axisColorMode": "text",
-                     "axisLabel": "",
-                     "axisPlacement": "auto",
-                     "barAlignment": 0,
-                     "drawStyle": "line",
-                     "fillOpacity": 0,
-                     "gradientMode": "none",
-                     "hideFrom": {
-                        "legend": false,
-                        "tooltip": false,
-                        "viz": false
-                     },
-                     "lineInterpolation": "linear",
-                     "lineWidth": 1,
-                     "pointSize": 5,
-                     "scaleDistribution": {
-                        "type": "linear"
-                     },
-                     "showPoints": "auto",
-                     "spanNulls": false,
-                     "stacking": {
-                        "group": "A",
-                        "mode": "none"
-                     },
-                     "thresholdsStyle": {
-                        "mode": "off"
-                     }
-                  },
-                  "mappings": [ ],
-                  "thresholds": {
-                     "mode": "absolute",
-                     "steps": [
-                        {
-                           "color": "green",
-                           "value": null
-                        }
-                     ]
+                     "fillOpacity": 30,
+                     "gradientMode": "opacity",
+                     "lineInterpolation": "smooth",
+                     "lineWidth": 2,
+                     "showPoints": "never"
                   },
                   "unit": "none"
-               },
-               "overrides": [ ]
+               }
             },
             "gridPos": {
                "h": 6,
                "w": 18,
                "x": 6,
-               "y": 31
+               "y": 29
             },
-            "id": 13,
+            "id": 15,
             "options": {
                "legend": {
                   "calcs": [ ],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
+                  "displayMode": "list"
                },
                "tooltip": {
                   "mode": "multi",
                   "sort": "desc"
                }
             },
+            "pluginVersion": "v11.0.0",
             "targets": [
                {
                   "datasource": {
+                     "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "increase(ibm_db2_log_operations_total{job=~\"$job\", instance=~\"$instance\", database_name=~\"$database_name\"}[$__interval:])",
+                  "expr": "increase(ibm_db2_log_operations_total{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}[$__interval:] offset -$__interval)",
                   "format": "time_series",
+                  "instant": false,
                   "interval": "1m",
                   "intervalFactor": 2,
-                  "legendFormat": "{{database_name}} - {{log_member}} - {{log_operation_type}}"
+                  "legendFormat": "{{database_name}} - {{log_member}} - {{log_operation_type}}",
+                  "refId": "Log operations"
                }
             ],
             "title": "Log operations",
             "type": "timeseries"
          }
       ],
-      "refresh": "1m",
-      "rows": [ ],
-      "schemaVersion": 14,
-      "style": "dark",
+      "refresh": "30s",
+      "schemaVersion": 39,
       "tags": [
-         "ibm-db2-mixin"
+         "ibm-db2"
       ],
       "templating": {
          "list": [
             {
-               "current": { },
-               "hide": 0,
-               "label": "Data Source",
+               "label": "Prometheus data source",
                "name": "prometheus_datasource",
-               "options": [ ],
                "query": "prometheus",
-               "refresh": 1,
-               "regex": "",
+               "regex": "(?!grafanacloud-usage|grafanacloud-ml-metrics).+",
                "type": "datasource"
             },
             {
-               "current": { },
-               "hide": 0,
-               "label": "Loki Datasource",
-               "name": "loki_datasource",
-               "options": [ ],
-               "query": "loki",
-               "refresh": 1,
-               "regex": "",
-               "type": "datasource"
-            },
-            {
-               "allValue": "",
-               "current": { },
+               "allValue": ".+",
                "datasource": {
+                  "type": "prometheus",
                   "uid": "${prometheus_datasource}"
                },
-               "hide": 0,
-               "includeAll": false,
+               "includeAll": true,
                "label": "Job",
-               "multi": false,
+               "multi": true,
                "name": "job",
-               "options": [ ],
-               "query": "label_values(ibm_db2_application_active,job)",
+               "query": "label_values(ibm_db2_application_active{job=\"integrations/ibm-db2\"}, job)",
                "refresh": 2,
-               "regex": "",
-               "sort": 0,
-               "tagValuesQuery": "",
-               "tags": [ ],
-               "tagsQuery": "",
-               "type": "query",
-               "useTags": false
+               "sort": 1,
+               "type": "query"
             },
             {
                "allValue": ".*",
-               "current": { },
                "datasource": {
+                  "type": "prometheus",
                   "uid": "${prometheus_datasource}"
                },
-               "hide": 2,
                "includeAll": true,
                "label": "Cluster",
                "multi": true,
                "name": "cluster",
-               "options": [ ],
-               "query": "label_values(ibm_db2_application_active{job=~\"$job\"}, cluster)",
+               "query": "label_values(ibm_db2_application_active{job=\"integrations/ibm-db2\",job=~\"$job\"}, cluster)",
                "refresh": 2,
-               "regex": "",
-               "sort": 0,
-               "tagValuesQuery": "",
-               "tags": [ ],
-               "tagsQuery": "",
-               "type": "query",
-               "useTags": false
+               "sort": 1,
+               "type": "query"
             },
             {
-               "allValue": "",
-               "current": { },
+               "allValue": ".+",
                "datasource": {
+                  "type": "prometheus",
                   "uid": "${prometheus_datasource}"
                },
-               "hide": 0,
-               "includeAll": false,
-               "label": "Instance",
-               "multi": false,
-               "name": "instance",
-               "options": [ ],
-               "query": "label_values(ibm_db2_application_active{job=~\"$job\"},instance)",
-               "refresh": 2,
-               "regex": "",
-               "sort": 0,
-               "tagValuesQuery": "",
-               "tags": [ ],
-               "tagsQuery": "",
-               "type": "query",
-               "useTags": false
-            },
-            {
-               "allValue": "",
-               "current": { },
-               "datasource": {
-                  "uid": "${prometheus_datasource}"
-               },
-               "hide": 0,
                "includeAll": true,
-               "label": "Database",
+               "label": "Instance",
+               "multi": true,
+               "name": "instance",
+               "query": "label_values(ibm_db2_application_active{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\"}, instance)",
+               "refresh": 2,
+               "sort": 1,
+               "type": "query"
+            },
+            {
+               "allValue": ".+",
+               "datasource": {
+                  "type": "prometheus",
+                  "uid": "${prometheus_datasource}"
+               },
+               "includeAll": true,
+               "label": "Database_name",
                "multi": true,
                "name": "database_name",
-               "options": [ ],
-               "query": "label_values(ibm_db2_application_active{job=~\"$job\"},database_name)",
+               "query": "label_values(ibm_db2_application_active{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\"}, database_name)",
                "refresh": 2,
-               "regex": "",
-               "sort": 0,
-               "tagValuesQuery": "",
-               "tags": [ ],
-               "tagsQuery": "",
-               "type": "query",
-               "useTags": false
+               "sort": 1,
+               "type": "query"
+            },
+            {
+               "hide": 2,
+               "label": "Loki data source",
+               "name": "loki_datasource",
+               "query": "loki",
+               "regex": "(?!grafanacloud.+usage-insights|grafanacloud.+alert-state-history).+",
+               "type": "datasource"
+            },
+            {
+               "datasource": {
+                  "type": "prometheus",
+                  "uid": "${prometheus_datasource}"
+               },
+               "multi": true,
+               "name": "database_name",
+               "query": "label_values(ibm_db2_application_active{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}, database_name)",
+               "refresh": 2,
+               "type": "query"
             }
          ]
       },
       "time": {
-         "from": "now-3h",
+         "from": "now-30m",
          "to": "now"
-      },
-      "timepicker": {
-         "refresh_intervals": [
-            "5s",
-            "10s",
-            "30s",
-            "1m",
-            "5m",
-            "15m",
-            "30m",
-            "1h",
-            "2h",
-            "1d"
-         ],
-         "time_options": [
-            "5m",
-            "15m",
-            "1h",
-            "6h",
-            "12h",
-            "24h",
-            "2d",
-            "7d",
-            "30d"
-         ]
       },
       "timezone": "default",
       "title": "IBM DB2 overview",
-      "uid": "ibm-db2-overview",
-      "version": 0
+      "uid": "ibmdb2-overview"
    }
