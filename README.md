@@ -23,7 +23,7 @@ To deactivate a database, connect to DB2 and run the command `deactivate databas
 The ibm-db2-exporter has been tested on Single Partition Db2,  limited testing on Logical DPF and should work Physical DPF  ( sharded DB2 ).  DB2 Purescale no testing performed . 
 
 Additionally, The least Db2 privileges required to run 
-ibm-db2-exporter our - 
+ibm-db2-exporter should look like this  - 
 
 db2 grant connect on database to user prometheus;
 
