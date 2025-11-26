@@ -17,8 +17,6 @@
 package collector
 
 const (
-	
-
 	databaseTableMetricsQuery = `SELECT
 	SUM(connections_top) as connections_top,
 	SUM(deadlocks) as deadlock_count
