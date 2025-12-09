@@ -23,7 +23,7 @@ To deactivate a database, connect to DB2 and run the command `deactivate databas
 The ibm-db2-exporter has been tested on Single Partition Db2,  limited testing on Logical DPF and should work Physical DPF  ( sharded DB2 ).  DB2 Purescale no testing performed .  
 The "example_partitioned_metrics.prom"   in the folder "collector/testdata/" shows "0+2" DB2 Logical DPF sample with 2 user defined Partition groups PG_ONE( Partition 0), PG_ALL ( Partition 2).   
 The "single_metrics.prom is from"  in the folder "collector/testdata/" Single Partition Db2 with DB2 Sample database.  
-The "example2_partitioned_metrics.prom"   in the folder "collector/testdata/" shows "3" DB2 Logical DPF sample with no user defined Partition groups.
+The "example2_partitioned_metrics2.prom"   in the folder "collector/testdata/" shows "3" DB2 Logical DPF sample with no user defined Partition groups.
 
 
 Additionally, The least Db2 privileges required to run 
