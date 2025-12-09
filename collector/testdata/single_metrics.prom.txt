@@ -1,0 +1,71 @@
+# HELP ibm_db2_application_active The number of applications that are currently connected to the database.
+# TYPE ibm_db2_application_active gauge
+ibm_db2_application_active{database_name="TESTDB"} 1
+# HELP ibm_db2_application_executing The number of applications for which the database manager is currently processing a request.
+# TYPE ibm_db2_application_executing gauge
+ibm_db2_application_executing{database_name="TESTDB"} 1
+# HELP ibm_db2_bufferpool_hit_ratio The percentage of time that the database manager did not need to load a page from disk to service a page request.
+# TYPE ibm_db2_bufferpool_hit_ratio gauge
+ibm_db2_bufferpool_hit_ratio{bufferpool_name="IBMDEFAULTBP",database_name="TESTDB",home_host="db2server02",member="0",partition_group="ALL"} 89.09
+# HELP ibm_db2_connections_top_total The maximum number of concurrent connections to the database since the database was activated.
+# TYPE ibm_db2_connections_top_total counter
+ibm_db2_connections_top_total{database_name="TESTDB"} 13
+# HELP ibm_db2_deadlock_total The total number of deadlocks that have occurred.
+# TYPE ibm_db2_deadlock_total counter
+ibm_db2_deadlock_total{database_name="TESTDB"} 0
+# HELP ibm_db2_exporter_build_info A metric with a constant '1' value labeled by version, revision, branch, goversion from which ibm_db2_exporter was built, and the goos and goarch for the build.
+# TYPE ibm_db2_exporter_build_info gauge
+ibm_db2_exporter_build_info{branch="",goarch="amd64",goos="linux",goversion="go1.25.3",revision="unknown",tags="unknown",version=""} 1
+# HELP ibm_db2_lock_timeout_total The number of timeouts that a request to lock an object occurred instead of being granted.
+# TYPE ibm_db2_lock_timeout_total counter
+ibm_db2_lock_timeout_total{database_name="TESTDB"} 0
+# HELP ibm_db2_lock_usage The number of agents waiting on a lock.
+# TYPE ibm_db2_lock_usage gauge
+ibm_db2_lock_usage{database_name="TESTDB",lock_state="active"} 1
+ibm_db2_lock_usage{database_name="TESTDB",lock_state="waiting"} 0
+# HELP ibm_db2_lock_wait_time The average wait time for a lock.
+# TYPE ibm_db2_lock_wait_time gauge
+ibm_db2_lock_wait_time{database_name="TESTDB"} 0
+# HELP ibm_db2_log_operations_total The number of log pages read and written to by the logger.
+# TYPE ibm_db2_log_operations_total counter
+ibm_db2_log_operations_total{database_name="TESTDB",home_host="db2server02",log_operation_type="read",member="0"} 1
+ibm_db2_log_operations_total{database_name="TESTDB",home_host="db2server02",log_operation_type="write",member="0"} 242
+# HELP ibm_db2_log_usage The disk blocks of active logs space in the database that is not being used by uncommitted transactions. Each block correlates to 4 KiB blocks of storage.
+# TYPE ibm_db2_log_usage gauge
+ibm_db2_log_usage{database_name="TESTDB",home_host="db2server02",log_usage_type="available",member="0"} 145477
+ibm_db2_log_usage{database_name="TESTDB",home_host="db2server02",log_usage_type="used",member="0"} 606
+# HELP ibm_db2_row_total The total number of rows inserted, updated, read or deleted.
+# TYPE ibm_db2_row_total counter
+ibm_db2_row_total{database_name="TESTDB",row_state="deleted"} 0
+ibm_db2_row_total{database_name="TESTDB",row_state="inserted"} 0
+ibm_db2_row_total{database_name="TESTDB",row_state="read"} 483
+ibm_db2_row_total{database_name="TESTDB",row_state="updated"} 0
+# HELP ibm_db2_tablespace_usage The size and usage of table space in bytes.
+# TYPE ibm_db2_tablespace_usage gauge
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMCATGROUP",tablespace_name="SYSCATSPACE",tablespace_type="free"} 1.933312e+06
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMCATGROUP",tablespace_name="SYSCATSPACE",tablespace_type="total"} 2.34881024e+08
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMCATGROUP",tablespace_name="SYSCATSPACE",tablespace_type="used"} 2.32914944e+08
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMCATGROUP",tablespace_name="SYSTOOLSPACE",tablespace_type="free"} 2.8966912e+07
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMCATGROUP",tablespace_name="SYSTOOLSPACE",tablespace_type="total"} 3.3554432e+07
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMCATGROUP",tablespace_name="SYSTOOLSPACE",tablespace_type="used"} 4.554752e+06
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="DB2SAMPLEINDEX2",tablespace_type="free"} 3.2505856e+07
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="DB2SAMPLEINDEX2",tablespace_type="total"} 3.3554432e+07
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="DB2SAMPLEINDEX2",tablespace_type="used"} 786432
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="IBMDB2SAMPLEREL",tablespace_type="free"} 2.62144e+07
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="IBMDB2SAMPLEREL",tablespace_type="total"} 3.3554432e+07
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="IBMDB2SAMPLEREL",tablespace_type="used"} 7.077888e+06
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="IBMDB2SAMPLEREL2",tablespace_type="free"} 3.2505856e+07
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="IBMDB2SAMPLEREL2",tablespace_type="total"} 3.3554432e+07
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="IBMDB2SAMPLEREL2",tablespace_type="used"} 786432
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="IBMDB2SAMPLEXML",tablespace_type="free"} 2.1495808e+07
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="IBMDB2SAMPLEXML",tablespace_type="total"} 3.3554432e+07
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="IBMDB2SAMPLEXML",tablespace_type="used"} 1.179648e+07
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="USERSPACE1",tablespace_type="free"} 1.7825792e+07
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="USERSPACE1",tablespace_type="total"} 3.3554432e+07
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="USERSPACE1",tablespace_type="used"} 1.5466496e+07
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSPACE1",tablespace_type="free"} 0
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSPACE1",tablespace_type="total"} 8192
+ibm_db2_tablespace_usage{database_name="TESTDB",home_host="db2server02",member="0",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSPACE1",tablespace_type="used"} 8192
+# HELP ibm_db2_up Metric indicating the status of the exporter collection. 1 indicates that the connection to IBM DB2 was successful, and all available metrics were collected. A 0 indicates that the exporter failed to collect metrics or to connect to IBM DB2.
+# TYPE ibm_db2_up gauge
+ibm_db2_up{database_name="TESTDB"} 1
