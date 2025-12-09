@@ -6,7 +6,6 @@ ibm_db2_application_active{database_name=""} 12
 ibm_db2_application_executing{database_name=""} 7
 # HELP ibm_db2_bufferpool_hit_ratio The percentage of time that the database manager did not need to load a page from disk to service a page request.
 # TYPE ibm_db2_bufferpool_hit_ratio gauge
-# Showing Database DB2D01 is with 0 +2 Partitons , and 3 Partiton Groups.  ALL = Default 
 ibm_db2_bufferpool_hit_ratio{bufferpool_name="DATAPGALL",database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="ALL"} 33.33
 ibm_db2_bufferpool_hit_ratio{bufferpool_name="DATAPGALL",database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="PG_ALL"} 33.33
 ibm_db2_bufferpool_hit_ratio{bufferpool_name="DATAPGALL",database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="ALL"} 33.33
@@ -56,7 +55,6 @@ ibm_db2_row_total{database_name="",row_state="read"} 66
 ibm_db2_row_total{database_name="",row_state="updated"} 55
 # HELP ibm_db2_tablespace_usage The size and usage of table space in bytes.
 # TYPE ibm_db2_tablespace_usage gauge
-# More  then 1 Member ( Default 0 )  Single Partition , 1 or MEMBERS DB2 DPF .  Partition_group Includes default Partitions, and User Partition_groups
 ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMCATGROUP",tablespace_name="SYSCATSPACE",tablespace_type="free"} 3.751936e+06
 ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMCATGROUP",tablespace_name="SYSCATSPACE",tablespace_type="total"} 2.34881024e+08
 ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMCATGROUP",tablespace_name="SYSCATSPACE",tablespace_type="used"} 2.31112704e+08
