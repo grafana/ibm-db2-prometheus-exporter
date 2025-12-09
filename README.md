@@ -20,7 +20,7 @@ To deactivate a database, connect to DB2 and run the command `deactivate databas
 
 **Note:** Whether or not the database is activated only affects DB2's ability to report metrics, it does not affect DB2's behavior as a database.
 
-The ibm-db2-exporter has been tested on Single Partition Db2,  limited testing on Logical DPF and should work Physical DPF  ( sharded DB2 ).  DB2 Purescale no testing performed .  The  all_metrics.prom in the collector/testdata/all_metrics.prom  shows 0+2  DB2 Logical DPF sample with 2 user defined Partition groups PG_ONE( Partition 0), PG_ALL ( Partition 2).   The single_metrics.prom is from  Single Partition Db2 with DB2 Sample database.  
+The ibm-db2-exporter has been tested on Single Partition Db2,  limited testing on Logical DPF and should work Physical DPF  ( sharded DB2 ).  DB2 Purescale no testing performed .  The  all_metrics.prom in the collector/testdata/example_partitioned_metrics.prom  shows 0+2  DB2 Logical DPF sample with 2 user defined Partition groups PG_ONE( Partition 0), PG_ALL ( Partition 2).   The single_metrics.prom is from  Single Partition Db2 with DB2 Sample database.  
 
 Additionally, The least Db2 privileges required to run 
 ibm-db2-exporter should look like this  - 
