@@ -1,0 +1,114 @@
+# HELP ibm_db2_application_active The number of applications that are currently connected to the database.
+# TYPE ibm_db2_application_active gauge
+ibm_db2_application_active{database_name=""} 12
+# HELP ibm_db2_application_executing The number of applications for which the database manager is currently processing a request.
+# TYPE ibm_db2_application_executing gauge
+ibm_db2_application_executing{database_name=""} 7
+# HELP ibm_db2_bufferpool_hit_ratio The percentage of time that the database manager did not need to load a page from disk to service a page request.
+# TYPE ibm_db2_bufferpool_hit_ratio gauge
+ibm_db2_bufferpool_hit_ratio{bufferpool_name="DATAPGALL",database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="ALL"} 33.33
+ibm_db2_bufferpool_hit_ratio{bufferpool_name="DATAPGALL",database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="PG_ALL"} 33.33
+ibm_db2_bufferpool_hit_ratio{bufferpool_name="DATAPGALL",database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="ALL"} 33.33
+ibm_db2_bufferpool_hit_ratio{bufferpool_name="DATAPGALL",database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="PG_ALL"} 33.33
+ibm_db2_bufferpool_hit_ratio{bufferpool_name="DATAPGONE",database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="ALL"} 33.33
+ibm_db2_bufferpool_hit_ratio{bufferpool_name="DATAPGONE",database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="PG_ONE"} 33.33
+ibm_db2_bufferpool_hit_ratio{bufferpool_name="IBMDEFAULTBP",database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="ALL"} 92.69
+ibm_db2_bufferpool_hit_ratio{bufferpool_name="IBMDEFAULTBP",database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="ALL"} 33.33
+ibm_db2_bufferpool_hit_ratio{bufferpool_name="IBMDEFAULTBP",database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="ALL"} 33.33
+# HELP ibm_db2_connections_top_total The maximum number of concurrent connections to the database since the database was activated.
+# TYPE ibm_db2_connections_top_total counter
+ibm_db2_connections_top_total{database_name=""} 18
+# HELP ibm_db2_deadlock_total The total number of deadlocks that have occurred.
+# TYPE ibm_db2_deadlock_total counter
+ibm_db2_deadlock_total{database_name=""} 3
+# HELP ibm_db2_lock_timeout_total The number of timeouts that a request to lock an object occurred instead of being granted.
+# TYPE ibm_db2_lock_timeout_total counter
+ibm_db2_lock_timeout_total{database_name=""} 2
+# HELP ibm_db2_lock_usage The number of agents waiting on a lock.
+# TYPE ibm_db2_lock_usage gauge
+ibm_db2_lock_usage{database_name="",lock_state="active"} 5
+ibm_db2_lock_usage{database_name="",lock_state="waiting"} 3
+# HELP ibm_db2_lock_wait_time The average wait time for a lock.
+# TYPE ibm_db2_lock_wait_time gauge
+ibm_db2_lock_wait_time{database_name=""} 44
+# HELP ibm_db2_log_operations_total The number of log pages read and written to by the logger.
+# TYPE ibm_db2_log_operations_total counter
+ibm_db2_log_operations_total{database_name="",log_member="1",log_operation_type="read"} 4
+ibm_db2_log_operations_total{database_name="",log_member="1",log_operation_type="write"} 5
+ibm_db2_log_operations_total{database_name="",log_member="2",log_operation_type="read"} 8
+ibm_db2_log_operations_total{database_name="",log_member="2",log_operation_type="write"} 9
+ibm_db2_log_operations_total{database_name="",log_member="3",log_operation_type="read"} 3
+ibm_db2_log_operations_total{database_name="",log_member="3",log_operation_type="write"} 4
+# HELP ibm_db2_log_usage The disk blocks of active logs space in the database that is not being used by uncommitted transactions. Each block correlates to 4 KiB blocks of storage.
+# TYPE ibm_db2_log_usage gauge
+ibm_db2_log_usage{database_name="",log_member="1",log_usage_type="available"} 22
+ibm_db2_log_usage{database_name="",log_member="1",log_usage_type="used"} 33
+ibm_db2_log_usage{database_name="",log_member="2",log_usage_type="available"} 66
+ibm_db2_log_usage{database_name="",log_member="2",log_usage_type="used"} 77
+ibm_db2_log_usage{database_name="",log_member="3",log_usage_type="available"} 11
+ibm_db2_log_usage{database_name="",log_member="3",log_usage_type="used"} 22
+# HELP ibm_db2_row_total The total number of rows inserted, updated, read or deleted.
+# TYPE ibm_db2_row_total counter
+ibm_db2_row_total{database_name="",row_state="deleted"} 33
+ibm_db2_row_total{database_name="",row_state="inserted"} 44
+ibm_db2_row_total{database_name="",row_state="read"} 66
+ibm_db2_row_total{database_name="",row_state="updated"} 55
+# HELP ibm_db2_tablespace_usage The size and usage of table space in bytes.
+# TYPE ibm_db2_tablespace_usage gauge
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMCATGROUP",tablespace_name="SYSCATSPACE",tablespace_type="free"} 3.751936e+06
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMCATGROUP",tablespace_name="SYSCATSPACE",tablespace_type="total"} 2.34881024e+08
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMCATGROUP",tablespace_name="SYSCATSPACE",tablespace_type="used"} 2.31112704e+08
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMCATGROUP",tablespace_name="SYSTOOLSPACE",tablespace_type="free"} 3.2899072e+07
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMCATGROUP",tablespace_name="SYSTOOLSPACE",tablespace_type="total"} 3.3554432e+07
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMCATGROUP",tablespace_name="SYSTOOLSPACE",tablespace_type="used"} 638976
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMCATGROUP",tablespace_name="TEMPUSER_4K",tablespace_type="free"} 0
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMCATGROUP",tablespace_name="TEMPUSER_4K",tablespace_type="total"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMCATGROUP",tablespace_name="TEMPUSER_4K",tablespace_type="used"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="USERSPACE1",tablespace_type="free"} 3.2768e+07
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="USERSPACE1",tablespace_type="total"} 3.3554432e+07
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMDEFAULTGROUP",tablespace_name="USERSPACE1",tablespace_type="used"} 655360
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSPACE1",tablespace_type="free"} 0
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSPACE1",tablespace_type="total"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSPACE1",tablespace_type="used"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSYS_4K",tablespace_type="free"} 0
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSYS_4K",tablespace_type="total"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSYS_4K",tablespace_type="used"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="PG_ONE",tablespace_name="TBLSPACEPGONE",tablespace_type="free"} 1.2058624e+07
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="PG_ONE",tablespace_name="TBLSPACEPGONE",tablespace_type="total"} 6.7108864e+07
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="PG_ONE",tablespace_name="TBLSPACEPGONE",tablespace_type="used"} 5.4525952e+07
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="PG_ONE",tablespace_name="TEMPUSERPGONE_4K",tablespace_type="free"} 0
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="PG_ONE",tablespace_name="TEMPUSERPGONE_4K",tablespace_type="total"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="0",partition_group="PG_ONE",tablespace_name="TEMPUSERPGONE_4K",tablespace_type="used"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="IBMDEFAULTGROUP",tablespace_name="USERSPACE1",tablespace_type="free"} 3.2768e+07
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="IBMDEFAULTGROUP",tablespace_name="USERSPACE1",tablespace_type="total"} 3.3554432e+07
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="IBMDEFAULTGROUP",tablespace_name="USERSPACE1",tablespace_type="used"} 655360
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSPACE1",tablespace_type="free"} 0
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSPACE1",tablespace_type="total"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSPACE1",tablespace_type="used"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSYS_4K",tablespace_type="free"} 0
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSYS_4K",tablespace_type="total"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSYS_4K",tablespace_type="used"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="PG_ALL",tablespace_name="TBLSPACEPGALL",tablespace_type="free"} 2.8311552e+07
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="PG_ALL",tablespace_name="TBLSPACEPGALL",tablespace_type="total"} 3.3554432e+07
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="PG_ALL",tablespace_name="TBLSPACEPGALL",tablespace_type="used"} 4.718592e+06
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="PG_ALL",tablespace_name="TEMPUSERPGALL_4K",tablespace_type="free"} 0
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="PG_ALL",tablespace_name="TEMPUSERPGALL_4K",tablespace_type="total"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="1",partition_group="PG_ALL",tablespace_name="TEMPUSERPGALL_4K",tablespace_type="used"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="IBMDEFAULTGROUP",tablespace_name="USERSPACE1",tablespace_type="free"} 3.2768e+07
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="IBMDEFAULTGROUP",tablespace_name="USERSPACE1",tablespace_type="total"} 3.3554432e+07
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="IBMDEFAULTGROUP",tablespace_name="USERSPACE1",tablespace_type="used"} 655360
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSPACE1",tablespace_type="free"} 0
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSPACE1",tablespace_type="total"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSPACE1",tablespace_type="used"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSYS_4K",tablespace_type="free"} 0
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSYS_4K",tablespace_type="total"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="IBMTEMPGROUP",tablespace_name="TEMPSYS_4K",tablespace_type="used"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="PG_ALL",tablespace_name="TBLSPACEPGALL",tablespace_type="free"} 2.8311552e+07
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="PG_ALL",tablespace_name="TBLSPACEPGALL",tablespace_type="total"} 3.3554432e+07
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="PG_ALL",tablespace_name="TBLSPACEPGALL",tablespace_type="used"} 4.718592e+06
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="PG_ALL",tablespace_name="TEMPUSERPGALL_4K",tablespace_type="free"} 0
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="PG_ALL",tablespace_name="TEMPUSERPGALL_4K",tablespace_type="total"} 4096
+ibm_db2_tablespace_usage{database_name="DB2D01",home_host="dpfserver01",member="2",partition_group="PG_ALL",tablespace_name="TEMPUSERPGALL_4K",tablespace_type="used"} 4096
+# HELP ibm_db2_up Metric indicating the status of the exporter collection. 1 indicates that the connection to IBM DB2 was successful, and all available metrics were collected. A 0 indicates that the exporter failed to collect metrics or to connect to IBM DB2.
+# TYPE ibm_db2_up gauge
+ibm_db2_up{database_name=""} 1
