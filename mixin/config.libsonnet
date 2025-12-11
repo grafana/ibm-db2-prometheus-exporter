@@ -6,13 +6,12 @@
   instanceLabels: ['instance', 'database_name'],
 
   uid: 'ibm-db2',
-  dashboardTags: [self.uid],
+  dashboardTags: [self.uid + '-mixin'],
   dashboardNamePrefix: 'IBM DB2',
   dashboardPeriod: 'now-1h',
   dashboardTimezone: 'default',
   dashboardRefresh: '1m',
   metricsSource: ['prometheus'],  // metrics source for signals
-
 
   // Logging configuration
   enableLokiLogs: true,

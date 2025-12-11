@@ -1,6 +1,4 @@
 JSONNET_FMT := jsonnetfmt -n 2 --max-blank-lines 2 --string-style s --comment-style s
-DOCKER_ARCHS ?= amd64 armv7 arm64
-DOCKER_IMAGE_NAME ?= snowflake-exporter
 
 ALL_SRC := $(shell find . -name '*.go' -o -name 'Dockerfile*' -type f | sort)
 
@@ -21,7 +19,6 @@ install-ci-deps:
 	go install github.com/monitoring-mixins/mixtool/cmd/mixtool@main
 	go install github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@v0.5.1
 	go install github.com/grafana/grizzly/cmd/grr@latest
-	go install github.com/cloudflare/pint/cmd/pint@v0.70.0
 
 fmt:
 	@find . -name '*.libsonnet' -print -o -name '*.jsonnet' -print | \

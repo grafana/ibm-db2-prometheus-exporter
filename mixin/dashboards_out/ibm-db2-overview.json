@@ -673,7 +673,7 @@
       "refresh": "30s",
       "schemaVersion": 39,
       "tags": [
-         "ibm-db2"
+         "ibm-db2-mixin"
       ],
       "templating": {
          "list": [
