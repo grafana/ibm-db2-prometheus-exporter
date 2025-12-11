@@ -25,7 +25,6 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         for sig in std.objectFields(this.config.signals)
       },
 
-
     grafana: {
       variables: commonlib.variables.new(
         filteringSelector=this.config.filteringSelector,

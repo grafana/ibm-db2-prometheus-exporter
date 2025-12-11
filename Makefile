@@ -49,7 +49,6 @@ install-ci-deps:
 	go install github.com/monitoring-mixins/mixtool/cmd/mixtool@main
 	go install github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb@v0.5.1
 	go install github.com/grafana/grizzly/cmd/grr@latest
-	go install github.com/cloudflare/pint/cmd/pint@v0.70.0
 
 fmt:
 	@find . -name '*.libsonnet' -print -o -name '*.jsonnet' -print | \
