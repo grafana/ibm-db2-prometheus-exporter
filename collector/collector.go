@@ -35,7 +35,9 @@ const (
 	labelBufferpoolName   = "bufferpool_name"
 	labelDatabaseName     = "database_name"
 	labelLockState        = "lock_state"
-	labelLogMember        = "log_member"
+	labelMember           = "member"
+	labelHomeHost         = "home_host"
+	labelPartitionGroup   = "partition_group"
 	labelLogOperationType = "log_operation_type"
 	labelLogUsageType     = "log_usage_type"
 	labelRowState         = "row_state"
@@ -119,7 +121,7 @@ func NewCollector(logger log.Logger, cfg *Config) *Collector {
 		bufferpoolHitRatio: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "bufferpool", "hit_ratio"),
 			"The percentage of time that the database manager did not need to load a page from disk to service a page request.",
-			[]string{labelDatabaseName, labelBufferpoolName},
+			[]string{labelDatabaseName, labelMember, labelHomeHost, labelPartitionGroup, labelBufferpoolName},
 			nil,
 		),
 		rowCount: prometheus.NewDesc(
@@ -131,19 +133,19 @@ func NewCollector(logger log.Logger, cfg *Config) *Collector {
 		tablespaceUsage: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "tablespace", "usage"),
 			"The size and usage of table space in bytes.",
-			[]string{labelDatabaseName, labelTablespaceName, labelTablespaceType},
+			[]string{labelDatabaseName, labelMember, labelHomeHost, labelPartitionGroup, labelTablespaceName, labelTablespaceType},
 			nil,
 		),
 		logUsage: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "log", "usage"),
 			"The disk blocks of active logs space in the database that is not being used by uncommitted transactions. Each block correlates to 4 KiB blocks of storage.",
-			[]string{labelDatabaseName, labelLogMember, labelLogUsageType},
+			[]string{labelDatabaseName, labelMember, labelHomeHost, labelLogUsageType},
 			nil,
 		),
 		logOperations: prometheus.NewDesc(
 			prometheus.BuildFQName(namespace, "log", "operations_total"),
 			"The number of log pages read and written to by the logger.",
-			[]string{labelDatabaseName, labelLogMember, labelLogOperationType},
+			[]string{labelDatabaseName, labelMember, labelHomeHost, labelLogOperationType},
 			nil,
 		),
 		dbUp: prometheus.NewDesc(
@@ -354,15 +356,19 @@ func (c *Collector) collectTablespaceStorageMetrics(metrics chan<- prometheus.Me
 	defer rows.Close()
 
 	for rows.Next() {
+		var iMember int
+		var home_host string
 		var tablespace_name string
+		var partition_group string
 		var total, free, used float64
-		if err := rows.Scan(&tablespace_name, &total, &free, &used); err != nil {
+		if err := rows.Scan(&iMember, &home_host, &partition_group, &tablespace_name, &total, &free, &used); err != nil {
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
+		member := strconv.Itoa(iMember)
 
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, total, c.dbName, tablespace_name, "total")
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, free, c.dbName, tablespace_name, "free")
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, used, c.dbName, tablespace_name, "used")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, total, c.dbName, member, home_host, partition_group, tablespace_name, "total")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, free, c.dbName, member, home_host, partition_group, tablespace_name, "free")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, used, c.dbName, member, home_host, partition_group, tablespace_name, "used")
 	}
 
 	return rows.Err()
@@ -377,16 +383,17 @@ func (c *Collector) collectLogsMetrics(metrics chan<- prometheus.Metric) error {
 
 	for rows.Next() {
 		var iMember int
+		var home_host string
 		var available, used, reads, writes float64
-		if err := rows.Scan(&iMember, &available, &used, &reads, &writes); err != nil {
+		if err := rows.Scan(&iMember, &home_host, &available, &used, &reads, &writes); err != nil {
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
 		member := strconv.Itoa(iMember)
 
-		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, available, c.dbName, member, "available")
-		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, used, c.dbName, member, "used")
-		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, reads, c.dbName, member, "read")
-		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, writes, c.dbName, member, "write")
+		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, available, c.dbName, member, home_host, "available")
+		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, used, c.dbName, member, home_host, "used")
+		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, reads, c.dbName, member, home_host, "read")
+		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, writes, c.dbName, member, home_host, "write")
 	}
 
 	return rows.Err()
@@ -401,8 +408,12 @@ func (c *Collector) collectBufferpoolMetrics(metrics chan<- prometheus.Metric) e
 
 	for rows.Next() {
 		var bp_name string
-		var ratio, foo float64
-		if err := rows.Scan(&bp_name, &foo, &foo, &foo, &ratio); err != nil {
+		var iMember int
+		var home_host string
+		var partition_group string
+		var ratio float64
+		var physical_reads, logical_reads float64 // dummy variables to scan into
+		if err := rows.Scan(&iMember, &home_host, &partition_group, &bp_name, &logical_reads, &physical_reads, &ratio); err != nil {
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
 
@@ -410,8 +421,8 @@ func (c *Collector) collectBufferpoolMetrics(metrics chan<- prometheus.Metric) e
 		if ratio == -1 {
 			continue
 		}
-
-		metrics <- prometheus.MustNewConstMetric(c.bufferpoolHitRatio, prometheus.GaugeValue, ratio, c.dbName, bp_name)
+		member := strconv.Itoa(iMember)
+		metrics <- prometheus.MustNewConstMetric(c.bufferpoolHitRatio, prometheus.GaugeValue, ratio, c.dbName, member, home_host, partition_group, bp_name)
 	}
 
 	return rows.Err()

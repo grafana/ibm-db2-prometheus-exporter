@@ -20,6 +20,33 @@ To deactivate a database, connect to DB2 and run the command `deactivate databas
 
 **Note:** Whether or not the database is activated only affects DB2's ability to report metrics, it does not affect DB2's behavior as a database.
 
+The ibm-db2-exporter has been tested on Single Partition Db2,  limited testing on Logical DPF and should work Physical DPF  ( sharded DB2 ).  DB2 Purescale no testing performed .  
+The "example_partitioned_metrics.prom"   in the folder "collector/testdata/" shows "0+2" DB2 Logical DPF sample with 2 user defined Partition groups PG_ONE( Partition 0), PG_ALL ( Partition 2).   
+The "single_metrics.prom is from"  in the folder "collector/testdata/" Single Partition Db2 with DB2 Sample database.  
+The "example2_partitioned_metrics2.prom"   in the folder "collector/testdata/" shows "3" DB2 Logical DPF sample with no user defined Partition groups.
+
+
+Additionally, The least Db2 privileges required to run 
+ibm-db2-exporter should look like this  - 
+
+db2 grant connect on database to user prometheus;
+
+db2 grant execute on function SYSPROC.MON_GET_TRANSACTION_LOG to user prometheus;
+
+db2 grant execute on function SYSPROC.MON_GET_TABLESPACE to user prometheus;
+
+db2 grant execute on function SYSPROC.MON_GET_BUFFERPOOL to user prometheus;
+
+db2 grant execute on function SYSPROC.MON_GET_DATABASE to user prometheus;
+
+db2 grant execute on function SYSPROC.DB2_GET_INSTANCE_INFO to user prometheus;
+
+db2 grant select on table SYSCAT.TABLESPACES to user prometheus;
+
+db2 grant select on table SYSCAT.BUFFERPOOLS to user prometheus;
+
+
+
 ## Driver installation (optional)
 
 ```
