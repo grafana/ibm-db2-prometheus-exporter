@@ -6,7 +6,8 @@ Exports [IBM DB2](https://www.ibm.com/products/db2/database) metrics via HTTP fo
 
 # Prerequisites
 
-The [go_ibm_db driver](https://github.com/ibmdb/go_ibm_db) needs installed C library files in order to connect to the database. A minimal setup could be provided via using the [clidriver](https://github.com/ibmdb/go_ibm_db/blob/master/installer/setup.go).
+The [go_ibm_db driver](https://github.com/ibmdb/go_ibm_db) needs installed C library files in order to connect to the database. A minimal setup could be provided via using the [clidriver](https://github.com/ibmdb/go_ibm_db/blob/master/installer/setup.go). See [the driver installation section](#driver-installation
+)below for additional information on how to install those dependencies.
 
 In order for DB2 to correctly report metric values, the database being monitored must be "explicitly activated". Doing so will make it so that certain metric values are correctly incremented and not periodically reset. However, it does result in a performance impact on the environment DB2 is running in. The size of this impact will depend on the system, but will result in the most accurate data reported by DB2 and, subsequently, this exporter. To explicitly activate a database, connect to DB2 and run the command `activate database <dbname>` and disconnect. Now DB2 will correctly increment and store metrics.
 
@@ -47,27 +48,54 @@ db2 grant select on table SYSCAT.BUFFERPOOLS to user prometheus;
 
 
 
-## Driver installation (optional)
+## Driver installation
 
+### Automated installation
+
+The easiest way to install the IBM DB2 driver dependencies is to use the provided Makefile target:
+
+```bash
+make install-db2-driver
 ```
-go install github.com/ibmdb/go_ibm_db/installer@latest
+
+This will:
+1. Install the IBM DB2 clidriver at the version specified in `go.mod`
+2. Run the necessary setup scripts
+3. Generate a `setenv.sh` file with the correct environment variables
+
+After installation, source the environment file and build the exporter:
+
+```bash
+source ./setenv.sh
+make exporter
+```
+
+### Manual installation
+
+If you prefer to install manually:
+
+```bash
+go install github.com/ibmdb/go_ibm_db/installer@$(go list -m -f '{{.Version}}' github.com/ibmdb/go_ibm_db)
 ```
 
 Make sure to have the clidriver set up:
 
-```
-cd go/pkg/mod/github.com/ibmdb/go_ibm_db\@latest/installer && go run setup.go
+```bash
+cd $(go list -m -f '{{.Dir}}' github.com/ibmdb/go_ibm_db)/installer && go run setup.go
 ```
 
 ## Required environment variables
 
 Set the following environment variables before running the exporter in order for the driver to work:
 
+```bash
+export CLIDRIVER_PATH=$(go env GOPATH)/pkg/mod/github.com/ibmdb/clidriver
+export LD_LIBRARY_PATH=${CLIDRIVER_PATH}/lib
+export CGO_LDFLAGS=-L${CLIDRIVER_PATH}/lib
+export CGO_CFLAGS=-I${CLIDRIVER_PATH}/include
 ```
-LD_LIBRARY_PATH=go/pkg/mod/github.com/ibmdb/clidriver/lib
-CGO_LDFLAGS=-L/usr/local/go/pkg/mod/github.com/ibmdb/tmp/clidriver/lib
-CGO_CFLAGS=-I/usr/local/go/pkg/mod/github.com/ibmdb/clidriver/include
-```
+
+**Note:** If you used `make install-db2-driver`, these variables are automatically set in the generated `setenv.sh` file.
 
 # Configuration
 

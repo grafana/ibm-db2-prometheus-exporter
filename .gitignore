@@ -1,6 +1,9 @@
 # Binary from `make exporter` in ./Makefile
 bin
 
+# Auto-generated environment setup script from `make install-db2-driver`
+setenv.sh
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
