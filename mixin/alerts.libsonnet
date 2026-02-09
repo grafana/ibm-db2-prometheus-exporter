@@ -17,7 +17,7 @@
               summary: 'The average amount of time waiting for locks to become free is abnormally large.',
               description:
                 (
-                  'The average amount of time waiting for locks to become free is {{$labels.value}}ms for {{$labels.database_name}} which is above the threshold of %(alertsHighLockWaitTime)sms.'
+                  'The average amount of time waiting for locks to become free is {{ printf "%%.2f" $value }}ms for {{$labels.database_name}} which is above the threshold of %(alertsHighLockWaitTime)sms.'
                 ) % this.config,
             },
           },
@@ -34,7 +34,7 @@
               summary: 'There are deadlocks occurring in the database.',
               description:
                 (
-                  'The number of deadlocks is at {{$labels.value}} for {{$labels.database_name}} which is above the threshold of %(alertsHighNumberOfDeadlocks)s.'
+                  'The number of deadlocks is at {{ printf "%%.2f" $value }} for {{$labels.database_name}} which is above the threshold of %(alertsHighNumberOfDeadlocks)s.'
                 ) % this.config,
             },
           },
@@ -51,7 +51,7 @@
               summary: 'The amount of log space available for the DB2 instance is running out of space, rotate logs or delete unnecessary storage usage.',
               description:
                 (
-                  'The amount of log space being used by the DB2 instance is at {{$labels.value}}%% which is above the threshold of %(alertsLogUsageReachingLimit)s%%.'
+                  'The amount of log space being used by the DB2 instance is at {{ printf "%%.2f" $value }}%% which is above the threshold of %(alertsLogUsageReachingLimit)s%%.'
                 ) % this.config,
             },
           },

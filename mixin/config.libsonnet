@@ -1,8 +1,7 @@
 {
   local this = self,
-  filteringSelector: 'job="integrations/ibm-db2"',
+  filteringSelector: '',
   groupLabels: ['job', 'cluster'],
-  logLabels: ['job', 'cluster', 'instance'],
   instanceLabels: ['instance', 'database_name'],
 
   uid: 'ibm-db2',

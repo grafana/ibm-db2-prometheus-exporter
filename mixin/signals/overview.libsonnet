@@ -132,7 +132,7 @@ function(this) {
       unit: 'percent',
       sources: {
         prometheus: {
-          expr: '100 * sum(ibm_db2_log_usage{%(queriesSelector)s, log_usage_type="used"}) by (instance, job, database_name) / sum(ibm_db2_log_usage{%(queriesSelector)s, log_usage_type="available"}) by (instance, job, database_name)',
+          expr: '100 * sum(ibm_db2_log_usage{%(queriesSelector)s, log_usage_type="used"}) by (instance, job, database_name) / clamp_min(sum(ibm_db2_log_usage{%(queriesSelector)s, log_usage_type="available"}) by (instance, job, database_name), 1)',
           legendCustomTemplate: '{{instance}}',
         },
       },

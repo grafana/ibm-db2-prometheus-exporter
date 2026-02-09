@@ -32,7 +32,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         targets=[signals.activeConnections.asTarget() { intervalFactor: 2 }],
         description='The amount of active connections to the database.'
       )
-      + g.panel.timeSeries.standardOptions.withUnit('none'),
+      + g.panel.timeSeries.standardOptions.withUnit('short')
+      + g.panel.timeSeries.options.legend.withDisplayMode('table'),
 
     // Row operations (timeseries with increase)
     rowOperations:
@@ -41,7 +42,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         targets=[signals.rowOperations.asTarget() { interval: '1m', intervalFactor: 2 }],
         description='The number of row operations that are being performed on the database.'
       )
-      + g.panel.timeSeries.standardOptions.withUnit('none'),
+      + g.panel.timeSeries.standardOptions.withUnit('short')
+      + g.panel.timeSeries.options.legend.withDisplayMode('table'),
 
     // Bufferpool hit ratio (timeseries)
     bufferpoolHitRatio:
@@ -52,20 +54,14 @@ local commonlib = import 'common-lib/common/main.libsonnet';
       )
       + g.panel.timeSeries.standardOptions.withUnit('percent'),
 
-    // Tablespace usage (timeseries with thresholds)
+    // Tablespace usage (timeseries)
     tablespaceUsage:
       commonlib.panels.generic.timeSeries.base.new(
         'Tablespace usage',
         targets=[signals.tablespaceUsage.asTarget() { intervalFactor: 2 }],
         description='The size and usage of table spaces.'
       )
-      + g.panel.timeSeries.standardOptions.withUnit('decbytes')
-      + g.panel.timeSeries.standardOptions.thresholds.withSteps([
-        g.panel.timeSeries.thresholdStep.withColor('green')
-        + g.panel.timeSeries.thresholdStep.withValue(null),
-        g.panel.timeSeries.thresholdStep.withColor('red')
-        + g.panel.timeSeries.thresholdStep.withValue(80),
-      ]),
+      + g.panel.timeSeries.standardOptions.withUnit('decbytes'),
 
     // Average lock wait time (timeseries with thresholds)
     averageLockWaitTime:
@@ -79,7 +75,7 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         g.panel.timeSeries.thresholdStep.withColor('green')
         + g.panel.timeSeries.thresholdStep.withValue(null),
         g.panel.timeSeries.thresholdStep.withColor('red')
-        + g.panel.timeSeries.thresholdStep.withValue(80),
+        + g.panel.timeSeries.thresholdStep.withValue(t.config.alertsHighLockWaitTime),
       ]),
 
     // Deadlocks (timeseries with increase)
@@ -89,26 +85,22 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         targets=[signals.deadlocks.asTarget() { interval: '1m', intervalFactor: 2 }],
         description='The number of deadlocks occurring on the database.'
       )
-      + g.panel.timeSeries.standardOptions.withUnit('none')
+      + g.panel.timeSeries.standardOptions.withUnit('short')
       + g.panel.timeSeries.standardOptions.thresholds.withSteps([
         g.panel.timeSeries.thresholdStep.withColor('green')
         + g.panel.timeSeries.thresholdStep.withValue(null),
         g.panel.timeSeries.thresholdStep.withColor('red')
-        + g.panel.timeSeries.thresholdStep.withValue(80),
+        + g.panel.timeSeries.thresholdStep.withValue(t.config.alertsHighNumberOfDeadlocks),
       ]),
 
-    // Locks (timeseries with custom override)
+    // Locks (timeseries)
     locks:
       commonlib.panels.generic.timeSeries.base.new(
         'Locks',
         targets=[signals.lockUsage.asTarget() { intervalFactor: 2 }],
         description='The number of locks active and waiting in use in the database.'
       )
-      + g.panel.timeSeries.standardOptions.withUnit('none')
-      + g.panel.timeSeries.standardOptions.withOverrides([
-        g.panel.timeSeries.fieldOverride.byRegexp.new('/./')
-        + g.panel.timeSeries.fieldOverride.byRegexp.withProperty('custom.axisSoftMax', -4),
-      ]),
+      + g.panel.timeSeries.standardOptions.withUnit('short'),
 
     // Log storage usage (stat panel)
     logStorageUsage:
@@ -130,6 +122,6 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         targets=[signals.logOperations.asTarget() { interval: '1m', intervalFactor: 2 }],
         description='The number of log pages read and written to by the logger.'
       )
-      + g.panel.timeSeries.standardOptions.withUnit('none'),
+      + g.panel.timeSeries.standardOptions.withUnit('short'),
   },
 }

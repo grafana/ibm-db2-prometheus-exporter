@@ -6,6 +6,7 @@
       "id": null,
       "links": [
          {
+            "includeVars": true,
             "keepTime": true,
             "title": "IBM DB2 logs",
             "type": "link",
@@ -80,7 +81,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "ibm_db2_up{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}",
+                  "expr": "ibm_db2_up{job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}",
                   "format": "time_series",
                   "instant": false,
                   "intervalFactor": 2,
@@ -106,7 +107,7 @@
                      "lineWidth": 2,
                      "showPoints": "never"
                   },
-                  "unit": "none"
+                  "unit": "short"
                }
             },
             "gridPos": {
@@ -119,7 +120,7 @@
             "options": {
                "legend": {
                   "calcs": [ ],
-                  "displayMode": "list"
+                  "displayMode": "table"
                },
                "tooltip": {
                   "mode": "multi",
@@ -133,7 +134,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "ibm_db2_application_active{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}",
+                  "expr": "ibm_db2_application_active{job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}",
                   "format": "time_series",
                   "instant": false,
                   "intervalFactor": 2,
@@ -172,7 +173,7 @@
                      "lineWidth": 2,
                      "showPoints": "never"
                   },
-                  "unit": "none"
+                  "unit": "short"
                }
             },
             "gridPos": {
@@ -185,7 +186,7 @@
             "options": {
                "legend": {
                   "calcs": [ ],
-                  "displayMode": "list"
+                  "displayMode": "table"
                },
                "tooltip": {
                   "mode": "multi",
@@ -199,7 +200,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "increase(ibm_db2_row_total{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}[$__interval:] offset -$__interval)",
+                  "expr": "increase(ibm_db2_row_total{job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}[$__interval:] offset -$__interval)",
                   "format": "time_series",
                   "instant": false,
                   "interval": "1m",
@@ -253,7 +254,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "ibm_db2_bufferpool_hit_ratio{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}",
+                  "expr": "ibm_db2_bufferpool_hit_ratio{job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}",
                   "format": "time_series",
                   "instant": false,
                   "intervalFactor": 2,
@@ -292,18 +293,6 @@
                      "lineWidth": 2,
                      "showPoints": "never"
                   },
-                  "thresholds": {
-                     "steps": [
-                        {
-                           "color": "green",
-                           "value": null
-                        },
-                        {
-                           "color": "red",
-                           "value": 80
-                        }
-                     ]
-                  },
                   "unit": "decbytes"
                }
             },
@@ -331,7 +320,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "ibm_db2_tablespace_usage{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\", tablespace_type=\"used\"}",
+                  "expr": "ibm_db2_tablespace_usage{job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\", tablespace_type=\"used\"}",
                   "format": "time_series",
                   "instant": false,
                   "intervalFactor": 2,
@@ -378,7 +367,7 @@
                         },
                         {
                            "color": "red",
-                           "value": 80
+                           "value": 2000
                         }
                      ]
                   },
@@ -409,7 +398,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "ibm_db2_lock_wait_time{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}",
+                  "expr": "ibm_db2_lock_wait_time{job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}",
                   "format": "time_series",
                   "instant": false,
                   "intervalFactor": 2,
@@ -443,11 +432,11 @@
                         },
                         {
                            "color": "red",
-                           "value": 80
+                           "value": 5
                         }
                      ]
                   },
-                  "unit": "none"
+                  "unit": "short"
                }
             },
             "gridPos": {
@@ -474,7 +463,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "increase(ibm_db2_deadlock_total{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}[$__interval:] offset -$__interval)",
+                  "expr": "increase(ibm_db2_deadlock_total{job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}[$__interval:] offset -$__interval)",
                   "format": "time_series",
                   "instant": false,
                   "interval": "1m",
@@ -501,22 +490,8 @@
                      "lineWidth": 2,
                      "showPoints": "never"
                   },
-                  "unit": "none"
-               },
-               "overrides": [
-                  {
-                     "matcher": {
-                        "id": "byRegexp",
-                        "options": "/./"
-                     },
-                     "properties": [
-                        {
-                           "id": "custom.axisSoftMax",
-                           "value": -4
-                        }
-                     ]
-                  }
-               ]
+                  "unit": "short"
+               }
             },
             "gridPos": {
                "h": 6,
@@ -542,7 +517,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "ibm_db2_lock_usage{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}",
+                  "expr": "ibm_db2_lock_usage{job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}",
                   "format": "time_series",
                   "instant": false,
                   "intervalFactor": 2,
@@ -604,7 +579,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "100 * sum(ibm_db2_log_usage{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\", log_usage_type=\"used\"}) by (instance, job, database_name) / sum(ibm_db2_log_usage{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\", log_usage_type=\"available\"}) by (instance, job, database_name)",
+                  "expr": "100 * sum(ibm_db2_log_usage{job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\", log_usage_type=\"used\"}) by (instance, job, database_name) / clamp_min(sum(ibm_db2_log_usage{job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\", log_usage_type=\"available\"}) by (instance, job, database_name), 1)",
                   "format": "time_series",
                   "instant": false,
                   "intervalFactor": 2,
@@ -630,7 +605,7 @@
                      "lineWidth": 2,
                      "showPoints": "never"
                   },
-                  "unit": "none"
+                  "unit": "short"
                }
             },
             "gridPos": {
@@ -657,7 +632,7 @@
                      "type": "prometheus",
                      "uid": "${prometheus_datasource}"
                   },
-                  "expr": "increase(ibm_db2_log_operations_total{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}[$__interval:] offset -$__interval)",
+                  "expr": "increase(ibm_db2_log_operations_total{job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}[$__interval:] offset -$__interval)",
                   "format": "time_series",
                   "instant": false,
                   "interval": "1m",
@@ -694,7 +669,7 @@
                "label": "Job",
                "multi": true,
                "name": "job",
-               "query": "label_values(ibm_db2_application_active{job=\"integrations/ibm-db2\"}, job)",
+               "query": "label_values(ibm_db2_application_active{}, job)",
                "refresh": 2,
                "sort": 1,
                "type": "query"
@@ -709,7 +684,7 @@
                "label": "Cluster",
                "multi": true,
                "name": "cluster",
-               "query": "label_values(ibm_db2_application_active{job=\"integrations/ibm-db2\",job=~\"$job\"}, cluster)",
+               "query": "label_values(ibm_db2_application_active{job=~\"$job\"}, cluster)",
                "refresh": 2,
                "sort": 1,
                "type": "query"
@@ -724,7 +699,7 @@
                "label": "Instance",
                "multi": true,
                "name": "instance",
-               "query": "label_values(ibm_db2_application_active{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\"}, instance)",
+               "query": "label_values(ibm_db2_application_active{job=~\"$job\",cluster=~\"$cluster\"}, instance)",
                "refresh": 2,
                "sort": 1,
                "type": "query"
@@ -739,7 +714,7 @@
                "label": "Database_name",
                "multi": true,
                "name": "database_name",
-               "query": "label_values(ibm_db2_application_active{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\"}, database_name)",
+               "query": "label_values(ibm_db2_application_active{job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\"}, database_name)",
                "refresh": 2,
                "sort": 1,
                "type": "query"
@@ -759,7 +734,7 @@
                },
                "multi": true,
                "name": "database_name",
-               "query": "label_values(ibm_db2_application_active{job=\"integrations/ibm-db2\",job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}, database_name)",
+               "query": "label_values(ibm_db2_application_active{job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}, database_name)",
                "refresh": 2,
                "type": "query"
             }

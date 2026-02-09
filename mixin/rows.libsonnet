@@ -36,7 +36,7 @@ local g = import './g.libsonnet';
         panels.locks { gridPos: { h: 6, w: 8 } },
       ]),
 
-    // Logs row - contains diagnostic logs (if Loki is enabled), log storage usage, and log operations
+    // Logs row - contains log storage usage and log operations
     logsRow:
       g.panel.row.new('Logs')
       + g.panel.row.withPanels([
