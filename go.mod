@@ -7,7 +7,7 @@ toolchain go1.24.11
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/go-kit/log v0.2.1
-	github.com/ibmdb/go_ibm_db v0.4.3
+	github.com/ibmdb/go_ibm_db v0.5.4
 	github.com/prometheus/client_golang v1.15.1
 	github.com/stretchr/testify v1.8.2
 )
@@ -17,6 +17,7 @@ require (
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
+	github.com/ibmruntimes/go-recordio/v2 v2.0.0-20240416213906-ae0ad556db70 // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mwitkow/go-conntrack v0.0.0-20190716064945-2f068394615f // indirect
