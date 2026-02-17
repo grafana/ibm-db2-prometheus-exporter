@@ -33,7 +33,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         description='The amount of active connections to the database.'
       )
       + g.panel.timeSeries.standardOptions.withUnit('short')
-      + g.panel.timeSeries.options.legend.withDisplayMode('table'),
+      + g.panel.timeSeries.options.legend.withDisplayMode('table')
+      + g.panel.timeSeries.options.legend.withPlacement('right'),
 
     // Row operations (timeseries with increase)
     rowOperations:
@@ -43,7 +44,8 @@ local commonlib = import 'common-lib/common/main.libsonnet';
         description='The number of row operations that are being performed on the database.'
       )
       + g.panel.timeSeries.standardOptions.withUnit('short')
-      + g.panel.timeSeries.options.legend.withDisplayMode('table'),
+      + g.panel.timeSeries.options.legend.withDisplayMode('table')
+      + g.panel.timeSeries.options.legend.withPlacement('right'),
 
     // Bufferpool hit ratio (timeseries)
     bufferpoolHitRatio:

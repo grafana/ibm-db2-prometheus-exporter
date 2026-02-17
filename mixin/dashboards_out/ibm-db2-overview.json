@@ -120,7 +120,8 @@
             "options": {
                "legend": {
                   "calcs": [ ],
-                  "displayMode": "table"
+                  "displayMode": "table",
+                  "placement": "right"
                },
                "tooltip": {
                   "mode": "multi",
@@ -186,7 +187,8 @@
             "options": {
                "legend": {
                   "calcs": [ ],
-                  "displayMode": "table"
+                  "displayMode": "table",
+                  "placement": "right"
                },
                "tooltip": {
                   "mode": "multi",
