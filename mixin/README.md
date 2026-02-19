@@ -6,6 +6,7 @@ The IBM DB2 mixin consists of a configurable Grafana dashboard and alerts based 
 The IBM DB2 mixin contains the following dashboards:
 
 - IBM DB2 overview
+- IBM DB2 logs
 
 The mixin also contains the following alerts:
 
@@ -62,12 +63,13 @@ have a working Go development environment, it's easiest to run the following:
 
 ```bash
 go install github.com/google/go-jsonnet/cmd/jsonnetfmt@latest
+go install github.com/cloudflare/pint/cmd/pint@latest
 ```
 
 The files in `dashboards_out` need to be imported
 into your Grafana server. The exact details will be depending on your environment.
 
-`prometheus_alerts.yaml` needs to be imported into Prometheus.
+The alert rules in `prometheus_rules_out/prometheus_alerts.yaml` need to be imported into Prometheus.
 
 ## Generate dashboards and alerts
 
