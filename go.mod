@@ -5,7 +5,7 @@ go 1.24.0
 toolchain go1.24.11
 
 require (
-	github.com/DATA-DOG/go-sqlmock v1.5.0
+	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/go-kit/log v0.2.1
 	github.com/ibmdb/go_ibm_db v0.4.3
 	github.com/prometheus/client_golang v1.15.1
