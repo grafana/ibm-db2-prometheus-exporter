@@ -18,7 +18,7 @@
           "subdir": "gen/grafonnet-latest"
         }
       },
-      "version": "8a27651b56fbdba45a389ccb11440200091c73a1",
+      "version": "7380c9c64fb973f34c3ec46265621a2b0dee0058",
       "sum": "V9vAj21qJOc2DlMPDgB1eEjSQU4A+sAA4AXuJ6bd4xc="
     },
     {
@@ -28,7 +28,7 @@
           "subdir": "gen/grafonnet-v11.0.0"
         }
       },
-      "version": "42d098fae987f25f08480e203ca6ddc548c6efbf",
+      "version": "7380c9c64fb973f34c3ec46265621a2b0dee0058",
       "sum": "0BvzR0i4bS4hc2O3xDv6i9m52z7mPrjvqxtcPrGhynA="
     },
     {
@@ -38,7 +38,7 @@
           "subdir": "gen/grafonnet-v11.4.0"
         }
       },
-      "version": "8a27651b56fbdba45a389ccb11440200091c73a1",
+      "version": "7380c9c64fb973f34c3ec46265621a2b0dee0058",
       "sum": "aVAX09paQYNOoCSKVpuk1exVIyBoMt/C50QJI+Q/3nA="
     },
     {
@@ -48,8 +48,8 @@
           "subdir": "common-lib"
         }
       },
-      "version": "54a1543d797d49814d2f9c05b9c222b9f1e4f6e7",
-      "sum": "XnpzeZC2Pa1aEtDOqy+KTndcUTnwFMlj6XlZmv3XBj0="
+      "version": "229f60f870dd89d8b6e49c76aa70c31f4249f91d",
+      "sum": "PHS3edTM+rA7cKYn8Qovv/0D+i8V5yWMFIkcMtv4WfA="
     },
     {
       "source": {
@@ -58,7 +58,7 @@
           "subdir": "grafana-cloud-integration-utils"
         }
       },
-      "version": "d1eede9462c03d44dcd4a707aa8e7dcaf155a552",
+      "version": "229f60f870dd89d8b6e49c76aa70c31f4249f91d",
       "sum": "f4RYXgxayzDyeBjedbcUWaxIk3WN+y+wsEwcn+cWnJw="
     },
     {
@@ -68,8 +68,8 @@
           "subdir": "logs-lib"
         }
       },
-      "version": "54a1543d797d49814d2f9c05b9c222b9f1e4f6e7",
-      "sum": "0xwYsW92n4rE9PfO3drN4Ko9VeQBoV/IZ7nvgrnYaWk="
+      "version": "229f60f870dd89d8b6e49c76aa70c31f4249f91d",
+      "sum": "rgzaIMC4Gujx86mPdsVfQnzSfxzfuCg/sZPrDJBV3bU="
     },
     {
       "source": {
@@ -88,8 +88,8 @@
           "subdir": ""
         }
       },
-      "version": "4eee017d21cb63a303925d1dcd9fc5c496809b46",
-      "sum": "Kh0GbIycNmJPzk6IOMXn1BbtLNyaiiimclYk7+mvsns="
+      "version": "4d7f8cb24d613430799f9d56809cc6964f35cea9",
+      "sum": "hOrwkOx34tOXqoDVnwuI/Uf/dr9HFFSPWpDPOvnEGrk="
     },
     {
       "source": {
