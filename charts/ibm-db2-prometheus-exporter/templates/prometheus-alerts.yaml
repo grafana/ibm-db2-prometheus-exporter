@@ -1,0 +1,9 @@
+{{- if .Values.alerts.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  groups: {{ toYaml .Values.alerts.groups | nindent 4 }}
+{{- end -}}
