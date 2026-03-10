@@ -3,6 +3,7 @@
   filteringSelector: '',
   groupLabels: ['job', 'cluster'],
   instanceLabels: ['instance', 'database_name'],
+  customAllValue: '.*',  // Override this as desired. '.+' is a good option if you want to ensure a label is present
 
   uid: 'ibm-db2',
   dashboardTags: [self.uid + '-mixin'],
