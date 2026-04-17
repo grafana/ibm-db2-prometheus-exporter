@@ -29,3 +29,6 @@ setenv.sh
 
 # Dependency directories (remove the comment below to include it)
 mixin/vendor
+
+# IDE specifics
+.idea/
