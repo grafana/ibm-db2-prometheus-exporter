@@ -70,4 +70,4 @@ jobs:
         run: source ./setenv.sh && make exporter
 
       - name: Test
-        run: source ./setenv.sh && go test ./...
+        run: source ./setenv.sh && go test ./... -v
