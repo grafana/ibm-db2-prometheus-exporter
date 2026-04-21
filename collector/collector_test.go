@@ -156,31 +156,31 @@ func createMockDB(t *testing.T) (*sql.DB, sqlmock.Sqlmock) {
 		}),
 	)
 
-	// (rows) tbsp_name, total_b, free_b, used_b
+	// (rows) member, home_host, partition_group, tbsp_name, total_b, free_b, used_b
 	mock.ExpectQuery(tablespaceStorageMetricsQuery).WillReturnRows(
 		newRows(t, [][]string{
-			{"tbsp1", "333", "444", "555"},
-			{"tbsp2", "666", "777", "888"},
-			{"tbsp3", "999", "111", "222"},
+			{"0", "host1", "PG_ALL", "tbsp1", "333", "444", "555"},
+			{"1", "host1", "PG_ALL", "tbsp2", "666", "777", "888"},
+			{"2", "host1", "PG_ONE", "tbsp3", "999", "111", "222"},
 		}),
 	)
 
-	// (rows) member, blocks_available, blocks_used, log_reads, log_writes
+	// (rows) member, home_host, blocks_available, blocks_used, log_reads, log_writes
 	mock.ExpectQuery(logsMetricsQuery).WillReturnRows(
 		newRows(t, [][]string{
-			{"1", "22", "33", "4", "5"},
-			{"2", "66", "77", "8", "9"},
-			{"3", "11", "22", "3", "4"},
+			{"1", "host1", "22", "33", "4", "5"},
+			{"2", "host1", "66", "77", "8", "9"},
+			{"3", "host1", "11", "22", "3", "4"},
 		}),
 	)
 
-	// (rows) bp_name, logical_reads, physical_reads, member, hit_ratio
+	// (rows) member, home_host, partition_group, bp_name, logical_reads, physical_reads, hit_ratio
 	mock.ExpectQuery(bufferpoolMetricsQuery).WillReturnRows(
 		newRows(t, [][]string{
-			{"bp1", "0", "0", "1", "11.22"},
-			{"bp2", "0", "0", "2", "33.44"},
-			{"bp3", "0", "0", "3", "55.66"},
-			{"bp4", "0", "0", "4", "77.88"},
+			{"1", "host1", "PG_ALL", "bp1", "0", "0", "11.22"},
+			{"2", "host1", "PG_ALL", "bp2", "0", "0", "33.44"},
+			{"3", "host1", "PG_ONE", "bp3", "0", "0", "55.66"},
+			{"4", "host1", "PG_ONE", "bp4", "0", "0", "77.88"},
 		}),
 	)
 
