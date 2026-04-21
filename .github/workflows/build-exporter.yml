@@ -41,7 +41,7 @@ jobs:
   setup:
     name: Setup
     needs: [detect-changes]
-    if: needs.detect-changes.outputs.backend-changed == 'true'
+    if: true #needs.detect-changes.outputs.backend-changed == 'true'
     uses: ./.github/workflows/setup.yml
 
   build:
