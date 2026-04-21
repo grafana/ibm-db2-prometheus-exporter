@@ -39,7 +39,7 @@ func TestCollector_Collect(t *testing.T) {
 		col.db = db
 
 		// reading in & comparing metrics
-		f, err := os.Open(filepath.Join("testdata", "all_metrics.prom"))
+		f, err := os.Open(filepath.Join("testdata", "sim_all_metrics.prom"))
 		require.NoError(t, err)
 		defer f.Close()
 
