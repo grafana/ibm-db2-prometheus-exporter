@@ -22,10 +22,12 @@ jobs:
               with:
                   fetch-depth: 0
                   persist-credentials: false
+
             - name: Setup Go
               uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6
               with:
-                  go-version: 1.23
+                go-version-file: 'go.mod'
+
             - name: Tools cache
               id: tools-cache
               uses: actions/cache@v4
@@ -33,6 +35,7 @@ jobs:
                   path: |
                       ~/go/bin
                   key: ${{ runner.os }}-tools-${{ hashFiles('Makefile') }}
+
             - name: Install CI dependencies
               if: steps.tools-cache.outputs.cache-hit != 'true'
               run: make install-ci-deps
@@ -48,24 +51,27 @@ jobs:
               with:
                   fetch-depth: 0
                   persist-credentials: false
+
             - name: Setup Go
               uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6
               with:
-                  go-version: 1.23
+                go-version-file: 'go.mod'
+
             - name: Restore Tools cache
               uses: actions/cache@v4
               with:
                   path: |
                       ~/go/bin
                   key: ${{ runner.os }}-tools-${{ hashFiles('Makefile') }}
+
             - name: Install dependencies & build generated files
               working-directory: ./mixin
               run: make all
-            - name: Lint jsonnet
-              run: make lint-fmt
+
             - name: Lint mixin
               working-directory: ./mixin
               run: make lint
+
             - name: Check for unexpected changes in generated files
               working-directory: ./mixin
               run: "make -B dashboards_out prometheus_alerts.yaml && git diff --exit-code || ( echo 'Error: Generated files are not up to date. Run make and commit the local diff'; exit 1; )"
