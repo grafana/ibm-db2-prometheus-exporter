@@ -25,7 +25,6 @@ import (
 	"github.com/alecthomas/kingpin/v2"
 	"github.com/grafana/ibm-db2-prometheus-exporter/collector"
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/prometheus/common/promslog"
 	promslogflag "github.com/prometheus/common/promslog/flag"
@@ -76,10 +75,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	col := collector.NewCollector(logger, c)
+	// Add component prefix to logger for better log correlation
+	collectorLogger := logger.With("component", "ibm-db2-exporter")
+	col := collector.NewCollector(collectorLogger, c)
 
 	// Register collector with prometheus client library
-	prometheus.MustRegister(collectors.NewBuildInfoCollector())
 	prometheus.MustRegister(col)
 
 	serveMetrics(logger)
