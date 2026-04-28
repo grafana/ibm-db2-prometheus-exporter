@@ -26,8 +26,8 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/go-kit/kit/log"
 	"github.com/prometheus/client_golang/prometheus/testutil"
+	"github.com/prometheus/common/promslog"
 	"github.com/stretchr/testify/require"
 )
 
@@ -35,7 +35,7 @@ func TestCollector_Collect(t *testing.T) {
 	t.Run("Metrics match expected", func(t *testing.T) {
 		db, mock := createMockDB(t)
 
-		col := NewCollector(log.NewJSONLogger(os.Stdout), &Config{})
+		col := NewCollector(promslog.NewNopLogger(), &Config{})
 		col.db = db
 
 		// reading in & comparing metrics
@@ -49,7 +49,7 @@ func TestCollector_Collect(t *testing.T) {
 	t.Run("Metrics have no lint errors", func(t *testing.T) {
 		db, mock := createMockDB(t)
 
-		col := NewCollector(log.NewJSONLogger(os.Stdout), &Config{})
+		col := NewCollector(promslog.NewNopLogger(), &Config{})
 		col.db = db
 
 		p, err := testutil.CollectAndLint(col)
@@ -61,7 +61,7 @@ func TestCollector_Collect(t *testing.T) {
 	t.Run("All queries fail", func(t *testing.T) {
 		db, mock := createQueryErrMockDB(t)
 
-		col := NewCollector(log.NewJSONLogger(os.Stdout), &Config{})
+		col := NewCollector(promslog.NewNopLogger(), &Config{})
 		col.db = db
 
 		// reading in & comparing metrics
@@ -73,7 +73,7 @@ func TestCollector_Collect(t *testing.T) {
 		require.NoError(t, mock.ExpectationsWereMet())
 	})
 	t.Run("Database connection fails", func(t *testing.T) {
-		col := NewCollector(log.NewJSONLogger(os.Stdout), &Config{})
+		col := NewCollector(promslog.NewNopLogger(), &Config{})
 
 		openErr := col.ensureConnection()
 		require.Error(t, openErr)
