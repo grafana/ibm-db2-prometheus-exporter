@@ -19,11 +19,10 @@ package collector
 import (
 	"database/sql"
 	"fmt"
+	"log/slog"
 	"strconv"
 	"sync"
 
-	"github.com/go-kit/kit/log"
-	"github.com/go-kit/kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 
 	_ "github.com/ibmdb/go_ibm_db" // IBM DB2 db driver
@@ -47,7 +46,7 @@ const (
 
 type Collector struct {
 	config *Config
-	logger log.Logger
+	logger *slog.Logger
 	dbName string
 	db     *sql.DB
 
@@ -70,7 +69,7 @@ type Collector struct {
 }
 
 // NewCollector creates a new collector from the given config
-func NewCollector(logger log.Logger, cfg *Config) *Collector {
+func NewCollector(logger *slog.Logger, cfg *Config) *Collector {
 	return &Collector{
 		config:   cfg,
 		logger:   logger,
@@ -178,48 +177,48 @@ func (c *Collector) Describe(descs chan<- *prometheus.Desc) {
 // Collect collects all metrics for this collector and emits them down the provided channel
 // Implements prometheus.Collector
 func (c *Collector) Collect(metrics chan<- prometheus.Metric) {
-	level.Debug(c.logger).Log("msg", "Starting to collect metrics.")
+	c.logger.Debug("Starting to collect metrics.")
 
 	var up float64 = 1
 	if err := c.ensureConnection(); err != nil {
-		level.Error(c.logger).Log("msg", "Failed to connect to DB2.", "err", err)
+		c.logger.Error("Failed to connect to DB2.", "err", err)
 		metrics <- prometheus.MustNewConstMetric(c.dbUp, prometheus.GaugeValue, 0, c.dbName)
 		return
 	}
 	defer c.closeConnections()
 
 	if err := c.collectDatabaseMetrics(metrics); err != nil {
-		level.Error(c.logger).Log("msg", "Failed to collect general database metrics.", "err", err)
+		c.logger.Error("Failed to collect general database metrics.", "err", err)
 		up = 0
 	}
 
 	if err := c.collectApplicationMetrics(metrics); err != nil {
-		level.Error(c.logger).Log("msg", "Failed to collect application metrics.", "err", err)
+		c.logger.Error("Failed to collect application metrics.", "err", err)
 		up = 0
 	}
 
 	if err := c.collectLockMetrics(metrics); err != nil {
-		level.Error(c.logger).Log("msg", "Failed to collect lock metrics.", "err", err)
+		c.logger.Error("Failed to collect lock metrics.", "err", err)
 		up = 0
 	}
 
 	if err := c.collectRowMetrics(metrics); err != nil {
-		level.Error(c.logger).Log("msg", "Failed to collect row operation metrics.", "err", err)
+		c.logger.Error("Failed to collect row operation metrics.", "err", err)
 		up = 0
 	}
 
 	if err := c.collectTablespaceStorageMetrics(metrics); err != nil {
-		level.Error(c.logger).Log("msg", "Failed to collect tablespace storage metrics.", "err", err)
+		c.logger.Error("Failed to collect tablespace storage metrics.", "err", err)
 		up = 0
 	}
 
 	if err := c.collectLogsMetrics(metrics); err != nil {
-		level.Error(c.logger).Log("msg", "Failed to collect log metrics.", "err", err)
+		c.logger.Error("Failed to collect log metrics.", "err", err)
 		up = 0
 	}
 
 	if err := c.collectBufferpoolMetrics(metrics); err != nil {
-		level.Error(c.logger).Log("msg", "Failed to collect bufferpool metrics.", "err", err)
+		c.logger.Error("Failed to collect bufferpool metrics.", "err", err)
 		up = 0
 	}
 
@@ -259,7 +258,7 @@ func (c *Collector) ensureConnection() error {
 
 func (c *Collector) closeConnections() {
 	if err := c.db.Close(); err != nil {
-		level.Error(c.logger).Log("msg", "failing to close connection", "err", err)
+		c.logger.Error("failing to close connection", "err", err)
 	}
 	c.db = nil
 }

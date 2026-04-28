@@ -18,17 +18,17 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 
 	"github.com/alecthomas/kingpin/v2"
-	"github.com/go-kit/log"
-	"github.com/go-kit/log/level"
 	"github.com/grafana/ibm-db2-prometheus-exporter/collector"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/prometheus/common/promlog"
-	"github.com/prometheus/common/promlog/flag"
+	"github.com/prometheus/common/promslog"
+	promslogflag "github.com/prometheus/common/promslog/flag"
 	"github.com/prometheus/common/version"
 	"github.com/prometheus/exporter-toolkit/web"
 	webflag "github.com/prometheus/exporter-toolkit/web/kingpinflag"
@@ -57,13 +57,13 @@ const (
 func main() {
 	kingpin.Version(version.Print(exporterName))
 
-	promlogConfig := &promlog.Config{}
+	promslogConfig := &promslog.Config{}
 
-	flag.AddFlags(kingpin.CommandLine, promlogConfig)
+	promslogflag.AddFlags(kingpin.CommandLine, promslogConfig)
 	kingpin.HelpFlag.Short('h')
 	kingpin.Parse()
 
-	logger := promlog.New(promlogConfig)
+	logger := promslog.New(promslogConfig)
 
 	// Construct the collector, using the flags for configuration
 	c := &collector.Config{
@@ -72,20 +72,24 @@ func main() {
 	}
 
 	if err := c.Validate(); err != nil {
-		level.Error(logger).Log("msg", "Configuration is invalid.", "err", err)
+		logger.Error("Configuration is invalid.", "err", err)
 		os.Exit(1)
 	}
 
-	col := collector.NewCollector(logger, c)
+	// Add component prefix to logger for better log correlation
+	collectorLogger := logger.With("component", "ibm-db2-exporter")
+	col := collector.NewCollector(collectorLogger, c)
 
 	// Register collector with prometheus client library
-	prometheus.MustRegister(version.NewCollector(exporterName))
 	prometheus.MustRegister(col)
+
+	// Add build-info collector
+	prometheus.MustRegister(collectors.NewBuildInfoCollector())
 
 	serveMetrics(logger)
 }
 
-func serveMetrics(logger log.Logger) {
+func serveMetrics(logger *slog.Logger) {
 	landingPage := []byte(fmt.Sprintf(landingPageHtml, *metricPath))
 
 	http.Handle(*metricPath, promhttp.Handler())
@@ -96,7 +100,7 @@ func serveMetrics(logger log.Logger) {
 
 	srv := &http.Server{}
 	if err := web.ListenAndServe(srv, webConfig, logger); err != nil {
-		level.Error(logger).Log("msg", "Error running HTTP server", "err", err)
+		logger.Error("Error running HTTP server", "err", err)
 		os.Exit(1)
 	}
 }
