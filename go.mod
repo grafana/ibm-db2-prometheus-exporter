@@ -3,7 +3,7 @@ module github.com/grafana/ibm-db2-prometheus-exporter
 go 1.25.0
 
 require (
-	github.com/DATA-DOG/go-sqlmock v1.5.0
+	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/ibmdb/go_ibm_db v0.5.4
 	github.com/prometheus/client_golang v1.23.2
 	github.com/stretchr/testify v1.11.1
