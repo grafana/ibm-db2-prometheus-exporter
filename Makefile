@@ -5,9 +5,14 @@ GO_IBM_DB_VERSION := $(shell go list -m -f '{{.Version}}' github.com/ibmdb/go_ib
 GOPATH := $(shell go env GOPATH)
 CLIDRIVER_PATH := $(GOPATH)/pkg/mod/github.com/ibmdb/clidriver
 
+# Override Makefile.common's default (v1.49.0); must be set before the include.
+GOLANGCI_LINT_VERSION := v2.12.2
+GOVULNCHECK_VERSION ?= 0782b76014f15f24e22a438f30f308df42899ba1 # v1.3.0
+GOVULNCHECK          = $(FIRST_GOPATH)/bin/govulncheck
+
 ALL_SRC := $(shell find . -name '*.go' -o -name 'Dockerfile*' -type f | sort)
 
-all:: vet common-all
+all:: vet common-all security-check
 
 .PHONY: exporter
 exporter:
@@ -63,3 +68,20 @@ lint-fmt:
 			fi; \
 	done; \
 	exit $$RESULT
+
+.PHONY: vuln-check
+vuln-check:
+	@echo ">> Running govulncheck..."
+	@command -v $(GOVULNCHECK) >/dev/null 2>&1 || { echo "govulncheck not installed. Install: go install golang.org/x/vuln/cmd/govulncheck@0782b76014f15f24e22a438f30f308df42899ba1 # v1.3.0"; exit 1; }
+	$(GOVULNCHECK) ./...
+	@echo ">> govulncheck passed!"
+
+.PHONY: gosec-check
+gosec-check: $(GOLANGCI_LINT)
+	@echo ">> Running gosec via golangci-lint..."
+	@command -v $(GOLANGCI_LINT) >/dev/null 2>&1 || { echo "golangci-lint not installed. Install: https://golangci-lint.run/docs/welcome/install/"; exit 1; }
+	$(GOLANGCI_LINT) run --enable-only gosec $(pkgs)
+	@echo ">> Security checks passed!"
+
+.PHONY: security-check
+security-check: vuln-check gosec-check
