@@ -18,7 +18,7 @@ all:: vet common-all security-check
 exporter:
 	go build -o ./bin/ibm_db2_exporter ./cmd/ibm-db2-exporter/main.go
 
-
+include Makefile.common
 
 .PHONY: install-db2-driver
 install-db2-driver:
@@ -42,8 +42,6 @@ install-db2-driver:
 	@echo ""
 	@echo "To compile the exporter, run:"
 	@echo "  source ./setenv.sh && make exporter"
-
-include Makefile.common
 
 # Check if .github/workflows/*.yml need to be updated
 # when changing the install-ci-deps target.
