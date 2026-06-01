@@ -14,6 +14,7 @@
 
 //go:build !arm64
 
+// Package main wires together the IBM DB2 collector, Prometheus registry, and HTTP server.
 package main
 
 import (

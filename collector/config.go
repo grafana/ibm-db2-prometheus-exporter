@@ -20,6 +20,7 @@ import (
 	"errors"
 )
 
+// Config holds the DSN and target database name required to open a DB2 connection.
 type Config struct {
 	DSN          string
 	DatabaseName string
@@ -30,6 +31,7 @@ var (
 	errNoDatabase = errors.New("DATABASE must be specified and not empty")
 )
 
+// Validate returns an error when DSN or DatabaseName is empty.
 func (c *Config) Validate() error {
 	if c.DSN == "" {
 		return errNoDSN

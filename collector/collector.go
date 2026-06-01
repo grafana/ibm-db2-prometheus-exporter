@@ -14,6 +14,7 @@
 
 //go:build !arm64
 
+// Package collector implements IBM DB2 metric collection via database/sql.
 package collector
 
 import (
@@ -44,6 +45,7 @@ const (
 	labelTablespaceType   = "tablespace_type"
 )
 
+// Collector queries IBM DB2 and emits the collected metrics via prometheus.Collector.
 type Collector struct {
 	config *Config
 	logger *slog.Logger
