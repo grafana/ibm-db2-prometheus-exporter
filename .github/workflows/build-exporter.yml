@@ -81,8 +81,8 @@ jobs:
       - name: vuln-check
         run: source ./setenv.sh && make vuln-check
 
-      - name: lint-exporter
-        run: source ./setenv.sh && make lint-exporter
+      - name: lint
+        run: source ./setenv.sh && make lint
 
   build:
     name: Build and test Go exporter
