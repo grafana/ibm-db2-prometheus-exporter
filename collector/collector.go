@@ -270,7 +270,11 @@ func (c *Collector) collectDatabaseMetrics(metrics chan<- prometheus.Metric) err
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			c.logger.Error("failed to close rows", "err", err)
+		}
+	}()
 
 	for rows.Next() {
 		var deadlock_count, connections_top float64
@@ -290,7 +294,11 @@ func (c *Collector) collectApplicationMetrics(metrics chan<- prometheus.Metric) 
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			c.logger.Error("failed to close rows", "err", err)
+		}
+	}()
 
 	for rows.Next() {
 		var application_active, application_executing float64
@@ -310,7 +318,11 @@ func (c *Collector) collectLockMetrics(metrics chan<- prometheus.Metric) error {
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			c.logger.Error("failed to close rows", "err", err)
+		}
+	}()
 
 	for rows.Next() {
 		var lock_waiting, lock_active, lock_wait_time, lock_timeout_count float64
@@ -332,7 +344,11 @@ func (c *Collector) collectRowMetrics(metrics chan<- prometheus.Metric) error {
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			c.logger.Error("failed to close rows", "err", err)
+		}
+	}()
 
 	for rows.Next() {
 		var deleted, inserted, updated, read float64
@@ -354,7 +370,11 @@ func (c *Collector) collectTablespaceStorageMetrics(metrics chan<- prometheus.Me
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			c.logger.Error("failed to close rows", "err", err)
+		}
+	}()
 
 	for rows.Next() {
 		var iMember int
@@ -380,7 +400,11 @@ func (c *Collector) collectLogsMetrics(metrics chan<- prometheus.Metric) error {
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			c.logger.Error("failed to close rows", "err", err)
+		}
+	}()
 
 	for rows.Next() {
 		var iMember int
@@ -405,7 +429,11 @@ func (c *Collector) collectBufferpoolMetrics(metrics chan<- prometheus.Metric) e
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			c.logger.Error("failed to close rows", "err", err)
+		}
+	}()
 
 	for rows.Next() {
 		var bp_name string
