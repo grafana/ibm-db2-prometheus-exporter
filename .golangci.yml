@@ -14,6 +14,9 @@ linters:
     depguard:
       rules:
         main:
+          # $test excluded so the tests rule below is the sole arbiter for _test.go.
+          files:
+            - "!$test"
           list-mode: strict
           allow:
             - $gostd
