@@ -41,7 +41,7 @@ func TestCollector_Collect(t *testing.T) {
 		// reading in & comparing metrics
 		f, err := os.Open(filepath.Join("testdata", "sim_all_metrics.prom"))
 		require.NoError(t, err)
-		defer f.Close()
+		t.Cleanup(func() { require.NoError(t, f.Close()) })
 
 		require.NoError(t, testutil.CollectAndCompare(col, f))
 		require.NoError(t, mock.ExpectationsWereMet())
@@ -67,7 +67,7 @@ func TestCollector_Collect(t *testing.T) {
 		// reading in & comparing metrics
 		f, err := os.Open(filepath.Join("testdata", "query_failure.prom"))
 		require.NoError(t, err)
-		defer f.Close()
+		t.Cleanup(func() { require.NoError(t, f.Close()) })
 
 		require.NoError(t, testutil.CollectAndCompare(col, f))
 		require.NoError(t, mock.ExpectationsWereMet())
@@ -80,7 +80,7 @@ func TestCollector_Collect(t *testing.T) {
 
 		f, err := os.Open(filepath.Join("testdata", "query_failure.prom"))
 		require.NoError(t, err)
-		defer f.Close()
+		t.Cleanup(func() { require.NoError(t, f.Close()) })
 
 		// No metrics should be scraped if the database fails to open
 		err = testutil.CollectAndCompare(col, f)

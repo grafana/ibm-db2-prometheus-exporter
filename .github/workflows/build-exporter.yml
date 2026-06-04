@@ -41,12 +41,46 @@ jobs:
   setup:
     name: Setup
     needs: [detect-changes]
-    if: true #needs.detect-changes.outputs.exporter-changed == 'true'
+    if: needs.detect-changes.outputs.exporter-changed == 'true'
     uses: ./.github/workflows/setup.yml
+
+  lint-exporter:
+    name: Lint exporter
+    needs: [detect-changes, setup]
+    if: needs.detect-changes.outputs.exporter-changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Go
+        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6
+        with:
+          go-version-file: 'go.mod'
+          cache: true
+
+      # gosec / govulncheck both need a successful CGO compile of go_ibm_db.
+      - name: Install IBM DB2 Driver
+        run: make install-db2-driver
+
+      - name: gosec-check
+        run: source ./setenv.sh && make gosec-check
+
+      - name: Install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@0782b76014f15f24e22a438f30f308df42899ba1 # v1.3.0
+
+      - name: vuln-check
+        run: source ./setenv.sh && make vuln-check
+
+      - name: lint
+        run: source ./setenv.sh && make lint
 
   build:
     name: Build and test Go exporter
-    needs: [setup]
+    needs: [setup, lint-exporter]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

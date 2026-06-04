@@ -1,6 +1,6 @@
 module github.com/grafana/ibm-db2-prometheus-exporter
 
-go 1.25.0
+go 1.25.10
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2

@@ -14,6 +14,7 @@
 
 //go:build !arm64
 
+// Package main wires together the IBM DB2 collector, Prometheus registry, and HTTP server.
 package main
 
 import (
@@ -23,7 +24,6 @@ import (
 	"os"
 
 	"github.com/alecthomas/kingpin/v2"
-	"github.com/grafana/ibm-db2-prometheus-exporter/collector"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -32,6 +32,8 @@ import (
 	"github.com/prometheus/common/version"
 	"github.com/prometheus/exporter-toolkit/web"
 	webflag "github.com/prometheus/exporter-toolkit/web/kingpinflag"
+
+	"github.com/grafana/ibm-db2-prometheus-exporter/collector"
 )
 
 var (
@@ -44,7 +46,7 @@ var (
 const (
 	// The name of the exporter.
 	exporterName    = "ibm_db2_exporter"
-	landingPageHtml = `
+	landingPageHTML = `
 	<html>
 		<head><title>IBM DB2 exporter</title></head>
 		<body>
@@ -90,10 +92,10 @@ func main() {
 }
 
 func serveMetrics(logger *slog.Logger) {
-	landingPage := []byte(fmt.Sprintf(landingPageHtml, *metricPath))
+	landingPage := []byte(fmt.Sprintf(landingPageHTML, *metricPath))
 
 	http.Handle(*metricPath, promhttp.Handler())
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/", func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=UTF-8") // nolint: errcheck
 		w.Write(landingPage)                                       // nolint: errcheck
 	})

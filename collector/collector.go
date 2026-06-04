@@ -14,6 +14,7 @@
 
 //go:build !arm64
 
+// Package collector implements IBM DB2 metric collection via database/sql.
 package collector
 
 import (
@@ -44,6 +45,7 @@ const (
 	labelTablespaceType   = "tablespace_type"
 )
 
+// Collector queries IBM DB2 and emits the collected metrics via prometheus.Collector.
 type Collector struct {
 	config *Config
 	logger *slog.Logger
@@ -268,16 +270,20 @@ func (c *Collector) collectDatabaseMetrics(metrics chan<- prometheus.Metric) err
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			c.logger.Error("failed to close rows", "err", err)
+		}
+	}()
 
 	for rows.Next() {
-		var deadlock_count, connections_top float64
-		if err := rows.Scan(&connections_top, &deadlock_count); err != nil {
+		var deadlockCount, connectionsTop float64
+		if err := rows.Scan(&connectionsTop, &deadlockCount); err != nil {
 			return fmt.Errorf("failed to scan row: %w", err)
 		}
 
-		metrics <- prometheus.MustNewConstMetric(c.connectionsTop, prometheus.CounterValue, connections_top, c.dbName)
-		metrics <- prometheus.MustNewConstMetric(c.deadlockCount, prometheus.CounterValue, deadlock_count, c.dbName)
+		metrics <- prometheus.MustNewConstMetric(c.connectionsTop, prometheus.CounterValue, connectionsTop, c.dbName)
+		metrics <- prometheus.MustNewConstMetric(c.deadlockCount, prometheus.CounterValue, deadlockCount, c.dbName)
 	}
 
 	return rows.Err()
@@ -288,16 +294,20 @@ func (c *Collector) collectApplicationMetrics(metrics chan<- prometheus.Metric) 
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			c.logger.Error("failed to close rows", "err", err)
+		}
+	}()
 
 	for rows.Next() {
-		var application_active, application_executing float64
-		if err := rows.Scan(&application_active, &application_executing); err != nil {
+		var applicationActive, applicationExecuting float64
+		if err := rows.Scan(&applicationActive, &applicationExecuting); err != nil {
 			return fmt.Errorf("failed to scan row: %w", err)
 		}
 
-		metrics <- prometheus.MustNewConstMetric(c.applicationActive, prometheus.GaugeValue, application_active, c.dbName)
-		metrics <- prometheus.MustNewConstMetric(c.applicationExecuting, prometheus.GaugeValue, application_executing, c.dbName)
+		metrics <- prometheus.MustNewConstMetric(c.applicationActive, prometheus.GaugeValue, applicationActive, c.dbName)
+		metrics <- prometheus.MustNewConstMetric(c.applicationExecuting, prometheus.GaugeValue, applicationExecuting, c.dbName)
 	}
 
 	return rows.Err()
@@ -308,18 +318,22 @@ func (c *Collector) collectLockMetrics(metrics chan<- prometheus.Metric) error {
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			c.logger.Error("failed to close rows", "err", err)
+		}
+	}()
 
 	for rows.Next() {
-		var lock_waiting, lock_active, lock_wait_time, lock_timeout_count float64
-		if err := rows.Scan(&lock_waiting, &lock_active, &lock_wait_time, &lock_timeout_count); err != nil {
+		var lockWaiting, lockActive, lockWaitTime, lockTimeoutCount float64
+		if err := rows.Scan(&lockWaiting, &lockActive, &lockWaitTime, &lockTimeoutCount); err != nil {
 			return fmt.Errorf("failed to scan row: %w", err)
 		}
 
-		metrics <- prometheus.MustNewConstMetric(c.lockUsage, prometheus.GaugeValue, lock_waiting, c.dbName, "waiting")
-		metrics <- prometheus.MustNewConstMetric(c.lockUsage, prometheus.GaugeValue, lock_active, c.dbName, "active")
-		metrics <- prometheus.MustNewConstMetric(c.lockWaitTime, prometheus.GaugeValue, lock_wait_time, c.dbName)
-		metrics <- prometheus.MustNewConstMetric(c.lockTimeoutCount, prometheus.CounterValue, lock_timeout_count, c.dbName)
+		metrics <- prometheus.MustNewConstMetric(c.lockUsage, prometheus.GaugeValue, lockWaiting, c.dbName, "waiting")
+		metrics <- prometheus.MustNewConstMetric(c.lockUsage, prometheus.GaugeValue, lockActive, c.dbName, "active")
+		metrics <- prometheus.MustNewConstMetric(c.lockWaitTime, prometheus.GaugeValue, lockWaitTime, c.dbName)
+		metrics <- prometheus.MustNewConstMetric(c.lockTimeoutCount, prometheus.CounterValue, lockTimeoutCount, c.dbName)
 	}
 
 	return rows.Err()
@@ -330,7 +344,11 @@ func (c *Collector) collectRowMetrics(metrics chan<- prometheus.Metric) error {
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			c.logger.Error("failed to close rows", "err", err)
+		}
+	}()
 
 	for rows.Next() {
 		var deleted, inserted, updated, read float64
@@ -352,22 +370,26 @@ func (c *Collector) collectTablespaceStorageMetrics(metrics chan<- prometheus.Me
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			c.logger.Error("failed to close rows", "err", err)
+		}
+	}()
 
 	for rows.Next() {
 		var iMember int
-		var home_host string
-		var tablespace_name string
-		var partition_group string
+		var homeHost string
+		var tablespaceName string
+		var partitionGroup string
 		var total, free, used float64
-		if err := rows.Scan(&iMember, &home_host, &partition_group, &tablespace_name, &total, &free, &used); err != nil {
+		if err := rows.Scan(&iMember, &homeHost, &partitionGroup, &tablespaceName, &total, &free, &used); err != nil {
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
 		member := strconv.Itoa(iMember)
 
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, total, c.dbName, member, home_host, partition_group, tablespace_name, "total")
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, free, c.dbName, member, home_host, partition_group, tablespace_name, "free")
-		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, used, c.dbName, member, home_host, partition_group, tablespace_name, "used")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, total, c.dbName, member, homeHost, partitionGroup, tablespaceName, "total")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, free, c.dbName, member, homeHost, partitionGroup, tablespaceName, "free")
+		metrics <- prometheus.MustNewConstMetric(c.tablespaceUsage, prometheus.GaugeValue, used, c.dbName, member, homeHost, partitionGroup, tablespaceName, "used")
 	}
 
 	return rows.Err()
@@ -378,21 +400,25 @@ func (c *Collector) collectLogsMetrics(metrics chan<- prometheus.Metric) error {
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			c.logger.Error("failed to close rows", "err", err)
+		}
+	}()
 
 	for rows.Next() {
 		var iMember int
-		var home_host string
+		var homeHost string
 		var available, used, reads, writes float64
-		if err := rows.Scan(&iMember, &home_host, &available, &used, &reads, &writes); err != nil {
+		if err := rows.Scan(&iMember, &homeHost, &available, &used, &reads, &writes); err != nil {
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
 		member := strconv.Itoa(iMember)
 
-		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, available, c.dbName, member, home_host, "available")
-		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, used, c.dbName, member, home_host, "used")
-		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, reads, c.dbName, member, home_host, "read")
-		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, writes, c.dbName, member, home_host, "write")
+		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, available, c.dbName, member, homeHost, "available")
+		metrics <- prometheus.MustNewConstMetric(c.logUsage, prometheus.GaugeValue, used, c.dbName, member, homeHost, "used")
+		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, reads, c.dbName, member, homeHost, "read")
+		metrics <- prometheus.MustNewConstMetric(c.logOperations, prometheus.CounterValue, writes, c.dbName, member, homeHost, "write")
 	}
 
 	return rows.Err()
@@ -403,16 +429,20 @@ func (c *Collector) collectBufferpoolMetrics(metrics chan<- prometheus.Metric) e
 	if err != nil {
 		return fmt.Errorf("failed to query metrics: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			c.logger.Error("failed to close rows", "err", err)
+		}
+	}()
 
 	for rows.Next() {
-		var bp_name string
+		var bpName string
 		var iMember int
-		var home_host string
-		var partition_group string
+		var homeHost string
+		var partitionGroup string
 		var ratio float64
-		var physical_reads, logical_reads float64 // dummy variables to scan into
-		if err := rows.Scan(&iMember, &home_host, &partition_group, &bp_name, &logical_reads, &physical_reads, &ratio); err != nil {
+		var physicalReads, logicalReads float64 // dummy variables to scan into
+		if err := rows.Scan(&iMember, &homeHost, &partitionGroup, &bpName, &logicalReads, &physicalReads, &ratio); err != nil {
 			return fmt.Errorf("failed to query metrics: %w", err)
 		}
 
@@ -421,7 +451,7 @@ func (c *Collector) collectBufferpoolMetrics(metrics chan<- prometheus.Metric) e
 			continue
 		}
 		member := strconv.Itoa(iMember)
-		metrics <- prometheus.MustNewConstMetric(c.bufferpoolHitRatio, prometheus.GaugeValue, ratio, c.dbName, member, home_host, partition_group, bp_name)
+		metrics <- prometheus.MustNewConstMetric(c.bufferpoolHitRatio, prometheus.GaugeValue, ratio, c.dbName, member, homeHost, partitionGroup, bpName)
 	}
 
 	return rows.Err()

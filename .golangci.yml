@@ -1,22 +1,70 @@
 ---
-run:
-  deadline: 5m
+version: "2"
 
-output:
-  sort-results: true
+run:
+  timeout: 5m
 
 linters:
   enable:
     - depguard
+    - gosec
+    - misspell
+    - revive
+  settings:
+    depguard:
+      rules:
+        main:
+          # $test excluded so the tests rule below is the sole arbiter for _test.go.
+          files:
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/grafana/ibm-db2-prometheus-exporter
+            - github.com/alecthomas/kingpin/v2
+            - github.com/ibmdb/go_ibm_db
+            - github.com/prometheus/client_golang
+            - github.com/prometheus/common
+            - github.com/prometheus/exporter-toolkit
+          deny:
+            - pkg: io/ioutil
+              desc: deprecated since Go 1.16; use io and os
+            - pkg: github.com/pkg/errors
+              desc: use stdlib errors and fmt.Errorf with %w
+            - pkg: github.com/go-kit/log
+              desc: project uses stdlib log/slog
+            - pkg: github.com/go-kit/kit/log
+              desc: project uses stdlib log/slog
+            - pkg: github.com/sirupsen/logrus
+              desc: project uses stdlib log/slog
+            - pkg: github.com/golang/glog
+              desc: project uses stdlib log/slog
+            - pkg: go.uber.org/zap
+              desc: project uses stdlib log/slog
+            - pkg: golang.org/x/exp/slog
+              desc: superseded by stdlib log/slog
+        tests:
+          files:
+            - $test
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/grafana/ibm-db2-prometheus-exporter
+            - github.com/DATA-DOG/go-sqlmock
+            - github.com/prometheus/client_golang
+            - github.com/prometheus/common
+            - github.com/stretchr/testify
+    gosec:
+      severity: medium
+      confidence: medium
+
+formatters:
+  enable:
     - gofumpt
     - goimports
-    - revive
-    - misspell
-
-linters-settings:
-  errcheck:
-    exclude: errcheck_excludes.txt
-  goimports:
-    local-prefixes: github.com/prometheus/prometheus
-  gofumpt:
-    extra-rules: true
+  settings:
+    gofumpt:
+      extra-rules: true
+    goimports:
+      local-prefixes:
+        - github.com/grafana/ibm-db2-prometheus-exporter
