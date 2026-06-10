@@ -25,6 +25,18 @@
       "matchManagers": ["helmv3", "helm-values", "helmfile"],
       "groupName": "Helm updates",
       "groupSlug": "helm-updates"
+    },
+    {
+      "description": "Exclude mixin vendoring from lockfile maintenance",
+      "matchFileNames": ["**/jsonnetfile.json", "**/jsonnetfile.lock.json"],
+      "lockFileMaintenance": {
+        "enabled": false
+      }
+    },
+    {
+      "description": "Disable minimum release age check for update types that don't support timestamps",
+      "matchUpdateTypes": ["pin", "pinDigest", "digest"],
+      "minimumReleaseAge": null
     }
   ]
 }
