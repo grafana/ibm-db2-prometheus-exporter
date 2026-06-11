@@ -27,12 +27,7 @@ local logslib = import 'logs-lib/logs/main.libsonnet';
             ])
           )
         ) + root.applyCommon(
-          vars.multiInstance + [
-            g.dashboard.variable.query.new('database_name')
-            + g.dashboard.variable.custom.selectionOptions.withMulti(true)
-            + g.dashboard.variable.query.queryTypes.withLabelValues(label='database_name', metric='ibm_db2_application_active{%(queriesSelector)s}' % vars)
-            + g.dashboard.variable.query.withDatasourceFromVariable(vars.datasources.prometheus),
-          ],
+          vars.multiInstance,
           uid + '-overview',
           tags,
           links { ibmDb2Overview+:: {} },
