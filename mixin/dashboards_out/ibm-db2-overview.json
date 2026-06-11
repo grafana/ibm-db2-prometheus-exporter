@@ -789,7 +789,7 @@
                   "uid": "${prometheus_datasource}"
                },
                "includeAll": true,
-               "label": "Database_name",
+               "label": "Database",
                "multi": true,
                "name": "database_name",
                "query": "label_values(ibm_db2_application_active{job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\"}, database_name)",
@@ -804,17 +804,6 @@
                "query": "loki",
                "regex": "(?!grafanacloud.+usage-insights|grafanacloud.+alert-state-history).+",
                "type": "datasource"
-            },
-            {
-               "datasource": {
-                  "type": "prometheus",
-                  "uid": "${prometheus_datasource}"
-               },
-               "multi": true,
-               "name": "database_name",
-               "query": "label_values(ibm_db2_application_active{job=~\"$job\",cluster=~\"$cluster\",instance=~\"$instance\",database_name=~\"$database_name\"}, database_name)",
-               "refresh": 2,
-               "type": "query"
             }
          ]
       },
