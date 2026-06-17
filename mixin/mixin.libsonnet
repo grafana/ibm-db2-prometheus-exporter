@@ -15,6 +15,9 @@ local label_patch = {
   cluster+: {
     allValue: '.*',
   },
+  database_name+: {
+    label: 'Database',
+  },
 };
 
 {
