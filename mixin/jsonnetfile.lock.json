@@ -48,8 +48,8 @@
           "subdir": "common-lib"
         }
       },
-      "version": "229f60f870dd89d8b6e49c76aa70c31f4249f91d",
-      "sum": "PHS3edTM+rA7cKYn8Qovv/0D+i8V5yWMFIkcMtv4WfA="
+      "version": "7de2366e543e89e99233e0f7e50f5ff39be99801",
+      "sum": "GhrW1n42GrYIh+O1mb5s7fEwvMWeiebA4hIPgnIRpLk="
     },
     {
       "source": {
@@ -58,7 +58,7 @@
           "subdir": "grafana-cloud-integration-utils"
         }
       },
-      "version": "229f60f870dd89d8b6e49c76aa70c31f4249f91d",
+      "version": "7de2366e543e89e99233e0f7e50f5ff39be99801",
       "sum": "f4RYXgxayzDyeBjedbcUWaxIk3WN+y+wsEwcn+cWnJw="
     },
     {
@@ -68,7 +68,7 @@
           "subdir": "logs-lib"
         }
       },
-      "version": "229f60f870dd89d8b6e49c76aa70c31f4249f91d",
+      "version": "7de2366e543e89e99233e0f7e50f5ff39be99801",
       "sum": "rgzaIMC4Gujx86mPdsVfQnzSfxzfuCg/sZPrDJBV3bU="
     },
     {
@@ -78,7 +78,7 @@
           "subdir": "doc-util"
         }
       },
-      "version": "6ac6c69685b8c29c54515448eaca583da2d88150",
+      "version": "bf6f08ae02a51c48bdcec4629b1c1a5a62c6f803",
       "sum": "BrAL/k23jq+xy9oA7TWIhUx07dsA/QLm3g7ktCwe//U="
     },
     {
