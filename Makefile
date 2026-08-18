@@ -1,6 +1,6 @@
 JSONNET_FMT := jsonnetfmt -n 2 --max-blank-lines 2 --string-style s --comment-style s
 DOCKER_ARCHS ?= amd64 armv7 arm64
-DOCKER_IMAGE_NAME ?= snowflake-exporter
+DOCKER_IMAGE_NAME ?= ibm-db2-exporter
 GO_IBM_DB_VERSION := $(shell go list -m -f '{{.Version}}' github.com/ibmdb/go_ibm_db)
 GOPATH := $(shell go env GOPATH)
 CLIDRIVER_PATH := $(GOPATH)/pkg/mod/github.com/ibmdb/clidriver
@@ -17,6 +17,11 @@ all:: vet common-all security-check
 .PHONY: exporter
 exporter:
 	go build -o ./bin/ibm_db2_exporter ./cmd/ibm-db2-exporter/main.go
+
+# Override common-build: promu's default static linking is incompatible with
+# the CGO-based go_ibm_db driver, which only ships shared libraries (libdb2.so).
+.PHONY: build
+build: exporter
 
 include Makefile.common
 
