@@ -1,13 +1,13 @@
 JSONNET_FMT := jsonnetfmt -n 2 --max-blank-lines 2 --string-style s --comment-style s
 DOCKER_ARCHS ?= amd64 armv7 arm64
-DOCKER_IMAGE_NAME ?= snowflake-exporter
+DOCKER_IMAGE_NAME ?= ibm-db2-exporter
 GO_IBM_DB_VERSION := $(shell go list -m -f '{{.Version}}' github.com/ibmdb/go_ibm_db)
 GOPATH := $(shell go env GOPATH)
 CLIDRIVER_PATH := $(GOPATH)/pkg/mod/github.com/ibmdb/clidriver
 
 # Override Makefile.common's default (v1.49.0); must be set before the include.
-GOLANGCI_LINT_VERSION := v2.12.2
-GOVULNCHECK_VERSION ?= 0782b76014f15f24e22a438f30f308df42899ba1 # v1.3.0
+GOLANGCI_LINT_VERSION := c0d3ddc9cf3faa61a4e378e879ece580256d76e5 # v2.12.2
+GOVULNCHECK_VERSION ?= 617f44b718537dccdea1915395650e0529e3b72e # v1.7.0
 GOVULNCHECK          = $(FIRST_GOPATH)/bin/govulncheck
 
 ALL_SRC := $(shell find . -name '*.go' -o -name 'Dockerfile*' -type f | sort)
@@ -18,7 +18,19 @@ all:: vet common-all security-check
 exporter:
 	go build -o ./bin/ibm_db2_exporter ./cmd/ibm-db2-exporter/main.go
 
+# Override common-build: promu's default static linking is incompatible with
+# the CGO-based go_ibm_db driver, which only ships shared libraries (libdb2.so).
+.PHONY: build
+build: exporter
+
 include Makefile.common
+
+# Makefile.common's $(GOLANGCI_LINT) recipe installs via install.sh, which resolves
+# GOLANGCI_LINT_VERSION against tagged release tarballs and can't take a commit SHA.
+# Override it to install by SHA via `go install`, like GOVULNCHECK_VERSION above.
+$(GOLANGCI_LINT):
+	mkdir -p $(FIRST_GOPATH)/bin
+	GOBIN=$(FIRST_GOPATH)/bin go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(GOLANGCI_LINT_VERSION)
 
 .PHONY: install-db2-driver
 install-db2-driver:
@@ -70,7 +82,7 @@ lint-fmt:
 .PHONY: vuln-check
 vuln-check:
 	@echo ">> Running govulncheck..."
-	@command -v $(GOVULNCHECK) >/dev/null 2>&1 || { echo "govulncheck not installed. Install: go install golang.org/x/vuln/cmd/govulncheck@0782b76014f15f24e22a438f30f308df42899ba1 # v1.3.0"; exit 1; }
+	@command -v $(GOVULNCHECK) >/dev/null 2>&1 || { echo "govulncheck not installed. Install: go install golang.org/x/vuln/cmd/govulncheck@617f44b718537dccdea1915395650e0529e3b72e # v1.7.0"; exit 1; }
 	$(GOVULNCHECK) ./...
 	@echo ">> govulncheck passed!"
 
