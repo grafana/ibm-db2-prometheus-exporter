@@ -28,7 +28,7 @@
     },
     {
       "description": "Exclude mixin vendoring from lockfile maintenance",
-      "matchFileNames": ["**/jsonnetfile.json", "**/jsonnetfile.lock.json"],
+      "matchManagers": ["jsonnet-bundler"],
       "lockFileMaintenance": {
         "enabled": false
       }
