@@ -18,8 +18,8 @@
           "subdir": "gen/grafonnet-latest"
         }
       },
-      "version": "7380c9c64fb973f34c3ec46265621a2b0dee0058",
-      "sum": "V9vAj21qJOc2DlMPDgB1eEjSQU4A+sAA4AXuJ6bd4xc="
+      "version": "41e6bfcbe4ef1054298ffff8664f1354c897dd2d",
+      "sum": "djejYCGNdtWsAd39+cHU1QNBIUKePhUyY4QNZt7XO4o="
     },
     {
       "source": {
@@ -28,7 +28,7 @@
           "subdir": "gen/grafonnet-v11.0.0"
         }
       },
-      "version": "7380c9c64fb973f34c3ec46265621a2b0dee0058",
+      "version": "41e6bfcbe4ef1054298ffff8664f1354c897dd2d",
       "sum": "0BvzR0i4bS4hc2O3xDv6i9m52z7mPrjvqxtcPrGhynA="
     },
     {
@@ -38,8 +38,18 @@
           "subdir": "gen/grafonnet-v11.4.0"
         }
       },
-      "version": "7380c9c64fb973f34c3ec46265621a2b0dee0058",
+      "version": "41e6bfcbe4ef1054298ffff8664f1354c897dd2d",
       "sum": "aVAX09paQYNOoCSKVpuk1exVIyBoMt/C50QJI+Q/3nA="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/grafana/grafonnet.git",
+          "subdir": "gen/grafonnet-v13.0.0"
+        }
+      },
+      "version": "41e6bfcbe4ef1054298ffff8664f1354c897dd2d",
+      "sum": "hZfIVja9O6czp3Pg8fzqmN891FLz8nPvy2IJND5qlGw="
     },
     {
       "source": {
@@ -48,7 +58,7 @@
           "subdir": "common-lib"
         }
       },
-      "version": "7de2366e543e89e99233e0f7e50f5ff39be99801",
+      "version": "414774b1104f1fb123b5657dc81443283f696f9c",
       "sum": "GhrW1n42GrYIh+O1mb5s7fEwvMWeiebA4hIPgnIRpLk="
     },
     {
@@ -58,7 +68,7 @@
           "subdir": "grafana-cloud-integration-utils"
         }
       },
-      "version": "7de2366e543e89e99233e0f7e50f5ff39be99801",
+      "version": "414774b1104f1fb123b5657dc81443283f696f9c",
       "sum": "f4RYXgxayzDyeBjedbcUWaxIk3WN+y+wsEwcn+cWnJw="
     },
     {
@@ -68,7 +78,7 @@
           "subdir": "logs-lib"
         }
       },
-      "version": "7de2366e543e89e99233e0f7e50f5ff39be99801",
+      "version": "414774b1104f1fb123b5657dc81443283f696f9c",
       "sum": "rgzaIMC4Gujx86mPdsVfQnzSfxzfuCg/sZPrDJBV3bU="
     },
     {
